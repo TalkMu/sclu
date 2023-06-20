@@ -2,7 +2,10 @@
 // #ifndef VUE3
 import Vue from 'vue'
 import App from './App'
+import TmTabBar from './components/tm-tab-bar/tm-tab-bar.vue'
 
+
+Vue.component('tm-tab-bar', TmTabBar)
 
 Vue.config.productionTip = false
 

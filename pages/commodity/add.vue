@@ -3,7 +3,9 @@
 		<form>
 			<textarea class="commodity-content" name="content" type="text" v-model="form.content"
 				placeholder="宝贝名称、描述,如品牌型号、入手渠道、转手原因..."></textarea>
-			<uni-file-picker @select="selectImage" @progress="uploadProgress"  @success="uploadSuccess" limit="9" title="" v-model="form.imgList" fileMediatype="image" ></uni-file-picker>
+			<uni-file-picker mode="grid" @delete="pickerDelete" :auto-upload="false" @select="selectImage" @progress="uploadProgress"
+				@success="uploadSuccess" limit="9" title="" v-model="form.imgList"
+				fileMediatype="image"></uni-file-picker>
 
 			<view class="location" @click="chooseLocation">
 				<uni-icons type="location" size="16" color="#a5a5a5"></uni-icons>{{form.location.name}}<uni-icons
@@ -93,15 +95,21 @@
 				<view class="footer">
 					<button type="default" class="price-submit-btn" @click="onDeliveryModeSubmit">确定</button>
 				</view>
-				
+
 			</view>
-			
+
 		</uni-popup>
 		<!-- <view :style="{'height':bottomHeight + 'px'}"></view> -->
 	</view>
 </template>
 
 <script>
+	import {
+		uploadFiles
+	} from '/api/common.js'
+	import {list as getCategoryList} from '/api/commodity_category.js'
+	import {add} from '@/api/commodity.js'
+	import {handleTree} from '@/utils/tools.js'
 	export default {
 		onShow() {
 			const that = this;
@@ -110,6 +118,9 @@
 					that.bottomHeight = res.safeAreaInsets.bottom + 20
 				}
 			});
+		},
+		onLoad() {
+			this.loadCommodityCategory()
 		},
 		data() {
 			return {
@@ -163,82 +174,102 @@
 						text: "请选择"
 					}
 				},
-				categoryOptions: [{
-						value: 1,
-						text: "家用电器",
-						children: [{
-								value: 101,
-								text: "电视机及配件",
-							},
-							{
-								value: 102,
-								text: "洗衣机及配件",
-							},
-						]
-					},
-					{
-						value: 2,
-						text: "数码产品",
-						children: [{
-								value: 201,
-								text: "手机",
-							},
-							{
-								value: 202,
-								text: "电脑",
-							},
-						]
-					},
-					{
-						value: 3,
-						text: "家具",
-						children: [{
-								value: 301,
-								text: "客厅家具",
-								children: [{
-									value: 301001,
-									text: "沙发",
-								}]
-							},
-							{
-								value: 302,
-								text: "卧室家具",
-							},
-						]
-					}
-				],
+				categoryOptions: [],
 				finenessOptions: ["全新", "几乎全新", "轻微使用痕迹", "明显使用痕迹"]
 			};
 		},
 		methods: {
-			selectImage(e){
-				console.log('选择文件：',e)
-				const files = e.tempFilePaths;
-			},
-			uploadProgress(e){
-				console.log('上传进度：',e)
-			},
-			uploadSuccess(e){
-				console.log('上传成功：',e)
-			},
-			onSumbit(){
-				const obj = this.form;
-				const params = {
-					content:obj.content,
-					imgList:obj.imgList,
-					location:{
-						name:obj.location.name,
-						detail:obj.location.detail,
-						latitude:obj.location.latitude,
-						longitude:obj.location.longitude
-					},
-					categoryId:obj.category.value,
-					price:obj.price,
-					originalPrice:obj.originalPrice,
-					fineness:obj.fineness,
-					deliveryMode:obj.deliveryMode
+			renameKey(arr){
+				if(arr == null || arr.length == 0){
+					return [];
 				}
-				console.log("onSubmit:"+JSON.stringify(params));
+				const that = this
+				return arr.map(item=>{
+					const data = {
+						value:item.id,
+						text:item.name,
+						children:[]
+					};
+					if(item.children != null && item.children.length != 0){
+						data.children = that.renameKey(item.children);
+					}
+					return data;
+				})
+			},
+			loadCommodityCategory(){
+				const that = this;
+				getCategoryList().then(res=>{
+					that.categoryOptions = that.renameKey(handleTree(res.data.rows));
+					console.log("categoryOptions:"+JSON.stringify(that.categoryOptions))
+				})
+			},
+			selectImage(e) {
+				console.log('选择文件：', e)
+				const tempFiles = e.tempFiles;
+				for(let i =0;i<tempFiles.length;i++){
+					this.form.imgList.push(tempFiles[i])
+				}
+				
+			},
+			pickerDelete(e) {
+				this.form.imgList.map((item, i) => {
+					if (item.url == e.tempFilePath) {
+						this.form.imgList.splice(i, 1)
+					}
+				})
+			},
+			uploadProgress(e) {
+				console.log('上传进度：', e)
+			},
+			uploadSuccess(e) {
+				console.log('上传成功：', e)
+			},
+			uploadImg(){
+				const that = this;
+				const len = this.form.imgList.length
+				return new Promise((resolve, reject)=>{
+					const arr = [];
+					const _that = that;
+					for(let i=0; i<that.form.imgList.length; i++ ){
+						uni.uploadFile({
+							url:"http://192.168.50.40:8080/common/upload",
+							filePath:this.form.imgList[i].url,
+							name:"file",
+							success: (res) => {
+								const result = JSON.parse(res.data)
+								arr.push(result.url)
+								if(i == (len - 1)){
+									resolve(arr)
+								}
+							}
+						})
+					}
+					
+				})
+			},
+			onSumbit() {
+				this.uploadImg().then((res)=>{
+					const obj = this.form;
+					const params = {
+						content: obj.content,
+						imgList: res,
+						location: {
+							name: obj.location.name,
+							detail: obj.location.detail,
+							latitude: obj.location.latitude,
+							longitude: obj.location.longitude
+						},
+						categoryId: obj.category.value,
+						price: obj.price,
+						originalPrice: obj.originalPrice,
+						fineness: obj.fineness,
+						deliveryMode: obj.deliveryMode
+					}
+					console.log("onSubmit:" + JSON.stringify(params));
+					add(params).then(res=>{
+						console.log("add-commodity-res:" + JSON.stringify(res));
+					})
+				})
 			},
 			onDeliveryModeSubmit() {
 				this.$refs.deliveryModePopup.close()
@@ -410,6 +441,7 @@
 		// }
 		.deliveryModePopup {
 			.content {
+				padding-bottom: 50px;
 				border-radius: 15px 15px 0 0;
 				overflow: hidden;
 				position: relative;
@@ -473,6 +505,7 @@
 
 		.pricePopup {
 			.content {
+				padding-bottom: 50px;
 				border-radius: 15px 15px 0 0;
 				overflow: hidden;
 				background-color: #fff;

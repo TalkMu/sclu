@@ -18,6 +18,7 @@
 
 <script>
 	export default {
+		name:"tm-tab-bar",
 		props: {
 			currentPage: {
 				type: Number,
@@ -26,7 +27,7 @@
 		},
 		data() {
 			return {
-				currentItem: 0,
+				currentItem: this.currentPage,
 				tabBar: {
 					list: [{
 							iconPath: "icon-home",
@@ -78,10 +79,17 @@
 		},
 		methods: {
 			changeItem(item, index) {
-				if (this.currentItem == index) return
-				this.$emit('changePage', item, index)
+				if(item.bulge){
+					uni.navigateTo({
+						url:item.pagePath
+					})
+				}else{
+					uni.switchTab({
+						url:item.pagePath
+					})
+				}
+				
 			}
-
 		}
 	}
 </script>
@@ -98,10 +106,11 @@
 
 	.container {
 		width: 100%;
-		height: 80px;
 		color: #515151;
 		background-color: #ffffff;
+		padding-bottom: env(safe-area-inset-bottom);
 		.tabbar-list {
+			height: 80px;
 			display: flex;
 			.tabbar-item {
 				height: 80px;

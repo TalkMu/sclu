@@ -1,6 +1,8 @@
 <template>
 	<view>
-		
+		<view class="tab-bar">
+			<tm-tab-bar  :currentPage="3"></tm-tab-bar>
+		</view>
 	</view>
 </template>
 
