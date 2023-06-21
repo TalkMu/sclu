@@ -1,8 +1,9 @@
 <template>
 	<view class="container">
 		<view class="search-wrapper">
+
 			<view class="location">
-				<text class="city">成都</text>
+				<text class="city">{{cityName}}</text>
 				<uni-icons type="location-filled" size="20" color="#f79c40"></uni-icons>
 			</view>
 			<view class="search-group">
@@ -15,7 +16,6 @@
 				<text>分类</text>
 			</view>
 		</view>
-		
 		<view class="category-wrapper">
 			<uni-grid :column="4" :highlight="true" @change="change" :showBorder="false">
 				<uni-grid-item v-for="(item, index) in categoryList" :index="index" :key="index">
@@ -35,16 +35,31 @@
 			</view>
 		</view>
 		<view class="tab-bar">
-			<tm-tab-bar  :currentPage="0"></tm-tab-bar>
+			<tm-tab-bar :currentPage="0"></tm-tab-bar>
 		</view>
 	</view>
 </template>
 
 <script>
 	import CommodityItem from '@/components/commodity-item/commodity-item.vue'
+	import {
+		getList as getCommodityList
+	} from '@/api/commodity.js'
+	import {
+		regeo
+	} from '@/api/common.js'
 	export default {
 		components: {
 			CommodityItem
+		},
+		onLoad() {
+		},
+		onShow() {
+			const location = uni.getStorageSync("location");
+			if(location != null){
+				console.log("----------------"+location.city)
+				this.cityName = location.city
+			}
 		},
 		onReachBottom() {
 			this.loadData()
@@ -52,12 +67,20 @@
 		onPullDownRefresh() {
 
 			console.log('refresh');
+			this.pageNum = 1
+			this.leftCommodityList = [];
+			this.rightCommodityList = [];
+			this.loadData()
 			setTimeout(function() {
 				uni.stopPullDownRefresh();
 			}, 1000);
 		},
 		data() {
 			return {
+				pageNum: 1,
+				pageSize: 10,
+				totalPage: 99,
+				cityName:"定位中",
 				categoryList: [{
 						name: "家具生活",
 						imgUrl: "https://pic1.zhimg.com/v2-dcb4723cec102a710ff5fed1251012a1_xs.jpg?source=172ae18b"
@@ -100,29 +123,34 @@
 			this.loadData()
 		},
 		methods: {
+			
 			loadData() {
-				for (var i = 1; i <= 10; i++) {
-					const item = {
-						coverImgUrl: "https://pic1.zhimg.com/v2-dcb4723cec102a710ff5fed1251012a1_xs.jpg?source=172ae18b",
-						content: (this.leftCommodityList.length+this.rightCommodityList.length + 1) + "特价处理苹果原装充电器",
-						hasFreeShipping: true,
-						createTime: "一周内发布",
-						price: 30,
-						originalPrice: 50,
-						wantCount: 5,
-						user: {
-							nickName: "咸鱼用户",
-							avatarUrl: "https://pic1.zhimg.com/v2-dcb4723cec102a710ff5fed1251012a1_xs.jpg?source=172ae18b"
-						}
-					}
-					
-					if (i % 2 == 1) {
-						this.leftCommodityList.push(item);
-					} else {
-						this.rightCommodityList.push(item);
+				if (this.pageNum > this.totalPage) {
+					uni.showToast({
+						title: "暂无更多数据"
+					})
+					return;
+				}
+				const params = {
+					pageNum: this.pageNum,
+					pageSize: this.pageSize
+				}
+				getCommodityList(params).then(res => {
+					if (res.data.code == 200) {
+						const list = res.data.rows;
+						this.totalPage = (res.data.total + this.pageSize - 1) / this.pageSize
+						list.forEach((item, index) => {
+							if ((index + 1) % 2 == 1) {
+								this.leftCommodityList.push(item);
+							} else {
+								this.rightCommodityList.push(item);
+							}
+						})
+						this.pageNum++
 					}
 
-				}
+				})
+
 				console.log(this.leftCommodityList)
 			}
 		}
@@ -216,6 +244,7 @@
 		}
 
 		.commodity-wrapper {
+			padding-bottom: 150px;
 			margin: 0px 10px;
 			display: flex;
 			justify-content: space-between;

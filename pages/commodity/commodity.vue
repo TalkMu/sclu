@@ -3,205 +3,205 @@
 		<view class="commodity-wrapper">
 			<view class="user-column">
 				<view class="left">
-					<image class="avatar" :src="user.avatarUrl"></image>
+					<image class="avatar" :src="data.user.avatarUrl"></image>
 					<view class="content">
-						<text class="nick-name">{{user.nickName}}</text>
+						<text class="nick-name">{{data.user.nickName}}</text>
 						<view class="detail">
 							<text>1小时前来过</text>
-							<view class="symbol" v-if="user.location"></view>
-							<text>{{user.location}}</text>
+							<view class="symbol" v-if="data.user.location"></view>
+							<text>{{data.user.location}}</text>
 						</view>
 					</view>
 				</view>
-				<view :class="['right',hasConcern?' active':'']" @click="onConcernChange">
-					{{hasConcern?"已关注":"+ 关注"}}
+				<view :class="['right',data.hasConcern?' active':'']" @click="onConcernChange">
+					{{data.hasConcern?"已关注":"+ 关注"}}
 				</view>
 			</view>
 			<view class="price-column">
 				<view class="left">
 					<view class="left-price">
 						<text class="symbol">￥</text>
-						<text class="price">{{price}}</text>
+						<text class="price">{{data.price}}</text>
 					</view>
-					<text class="original-price" v-if="originalPrice">￥{{originalPrice}}</text>
-					<text class="delivery-mode">{{deliveryMode}}</text>
+					<text class="original-price" v-if="data.originalPrice">￥{{data.originalPrice}}</text>
+					<text class="delivery-mode">{{data.deliveryMode}}</text>
 				</view>
 				<view class="right">
-					<view class="fineness">{{fineness}}</view>
-					<text class="browse">{{wantCount}}人想要 {{browseCount}}浏览</text>
+					<view class="fineness">{{data.fineness}}</view>
+					<text class="browse">{{data.wantCount}}人想要 {{data.browseCount}}浏览</text>
 				</view>
 			</view>
 			<view class="content-column">
-				{{content}}
+				{{data.content}}
 			</view>
 			<view class="attribute-column">
 				<view style="display: flex;overflow: auto;white-space: nowrap;">
-					<view v-for="(item,index) of attributeList">
+					<view v-for="(item,index) of data.attributeList">
 						<view class="attribute-item">
 							<view class="attr-content">
 								<text class="name">{{item.name}}</text>
 								<text>{{item.value}}</text>
 							</view>
-							<view class="symbol" v-if="index+1!=attributeList.length"></view>
+							<view class="symbol" v-if="index+1!=data.attributeList.length"></view>
 						</view>
 					</view>
 				</view>
 			</view>
 			<view class="commodity-img-column">
-				<view v-if="imgList.length == 1" class="img-column">
+				<view v-if="data.imgList.length == 1" class="img-column">
 					<view class="img-row">
-						<image :src="imgList[0]" @click="onPreviewImage(0)"></image>
+						<image :src="data.imgList[0]" @click="onPreviewImage(0)" mode="widthFix"></image>
 					</view>
 				</view>
-				<view v-if="imgList.length == 2" class="img-column">
+				<view v-if="data.imgList.length == 2" class="img-column">
 					<view class="img-row">
-						<image :src="imgList[0]" @click="onPreviewImage(0)"></image>
+						<image :src="data.imgList[0]" @click="onPreviewImage(0)"  mode="widthFix"></image>
 					</view>
 					<view class="img-row">
-						<image :src="imgList[1]" @click="onPreviewImage(1)"></image>
+						<image :src="data.imgList[1]" @click="onPreviewImage(1)"  mode="widthFix"></image>
 					</view>
 				</view>
-				<view v-if="imgList.length == 3" class="img-column">
+				<view v-if="data.imgList.length == 3" class="img-column">
 					<view class="img-row">
-						<image :src="imgList[0]" @click="onPreviewImage(0)"></image>
+						<image :src="data.imgList[0]" @click="onPreviewImage(0)"  mode="widthFix"></image>
 					</view>
 					<view class="img-row">
-						<image :style="{'height':imgGrid.half + 'px'}" :src="imgList[1]" @click="onPreviewImage(1)"
+						<image :style="{'height':imgGrid.half + 'px'}" :src="data.imgList[1]" @click="onPreviewImage(1)"
 							mode="aspectFill"></image>
-						<image :style="{'height':imgGrid.half + 'px'}" :src="imgList[2]" @click="onPreviewImage(2)"
+						<image :style="{'height':imgGrid.half + 'px'}" :src="data.imgList[2]" @click="onPreviewImage(2)"
 							mode="aspectFill"></image>
 					</view>
 				</view>
-				<view v-if="imgList.length == 4" class="img-column">
+				<view v-if="data.imgList.length == 4" class="img-column">
 					<view class="img-row">
-						<image :src="imgList[0]" @click="onPreviewImage(0)"></image>
+						<image :src="data.imgList[0]" @click="onPreviewImage(0)"  mode="widthFix"></image>
 					</view>
 					<view class="img-row">
 						<view style="width: 70%;">
-							<image :style="{'height':imgGrid.twoThirds + 'px'}" :src="imgList[1]"
+							<image :style="{'height':imgGrid.twoThirds + 'px'}" :src="data.imgList[1]"
 								@click="onPreviewImage(1)" mode="aspectFill">
 							</image>
 						</view>
 						<view style="width: 30%;" class="img-column">
-							<image :style="{'height':imgGrid.third + 'px'}" :src="imgList[2]" @click="onPreviewImage(2)"
+							<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[2]" @click="onPreviewImage(2)"
 								mode="aspectFill"></image>
-							<image :style="{'height':imgGrid.third + 'px'}" :src="imgList[3]" @click="onPreviewImage(3)"
+							<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[3]" @click="onPreviewImage(3)"
 								mode="aspectFill"></image>
 						</view>
 					</view>
 				</view>
-				<view v-if="imgList.length == 5" class="img-column">
+				<view v-if="data.imgList.length == 5" class="img-column">
 					<view class="img-row">
-						<image :src="imgList[0]" @click="onPreviewImage(0)"></image>
+						<image :src="data.imgList[0]" @click="onPreviewImage(0)"  mode="widthFix"></image>
 					</view>
 					<view class="img-row">
-						<image :style="{'height':imgGrid.half + 'px'}" :src="imgList[1]" @click="onPreviewImage(1)"
+						<image :style="{'height':imgGrid.half + 'px'}" :src="data.imgList[1]" @click="onPreviewImage(1)"
 							mode="aspectFill"></image>
-						<image :style="{'height':imgGrid.half + 'px'}" :src="imgList[2]" @click="onPreviewImage(2)"
-							mode="aspectFill"></image>
-					</view>
-					<view class="img-row">
-						<image :style="{'height':imgGrid.half + 'px'}" :src="imgList[3]" @click="onPreviewImage(3)"
-							mode="aspectFill"></image>
-						<image :style="{'height':imgGrid.half + 'px'}" :src="imgList[4]" @click="onPreviewImage(4)"
-							mode="aspectFill"></image>
-					</view>
-				</view>
-				<view v-if="imgList.length == 6" class="img-column">
-					<view class="img-row">
-						<image :src="imgList[0]" @click="onPreviewImage(0)"></image>
-					</view>
-					<view class="img-row">
-						<image :style="{'height':imgGrid.half + 'px'}" :src="imgList[1]" @click="onPreviewImage(1)"
-							mode="aspectFill"></image>
-						<image :style="{'height':imgGrid.half + 'px'}" :src="imgList[2]" @click="onPreviewImage(2)"
+						<image :style="{'height':imgGrid.half + 'px'}" :src="data.imgList[2]" @click="onPreviewImage(2)"
 							mode="aspectFill"></image>
 					</view>
 					<view class="img-row">
-						<image :style="{'height':imgGrid.third + 'px'}" :src="imgList[3]" @click="onPreviewImage(3)"
+						<image :style="{'height':imgGrid.half + 'px'}" :src="data.imgList[3]" @click="onPreviewImage(3)"
 							mode="aspectFill"></image>
-						<image :style="{'height':imgGrid.third + 'px'}" :src="imgList[4]" @click="onPreviewImage(4)"
-							mode="aspectFill"></image>
-						<image :style="{'height':imgGrid.third + 'px'}" :src="imgList[5]" @click="onPreviewImage(5)"
+						<image :style="{'height':imgGrid.half + 'px'}" :src="data.imgList[4]" @click="onPreviewImage(4)"
 							mode="aspectFill"></image>
 					</view>
 				</view>
-				<view v-if="imgList.length == 7" class="img-column">
+				<view v-if="data.imgList.length == 6" class="img-column">
 					<view class="img-row">
-						<image :src="imgList[0]" @click="onPreviewImage(0)"></image>
+						<image :src="data.imgList[0]" @click="onPreviewImage(0)"  mode="widthFix"></image>
+					</view>
+					<view class="img-row">
+						<image :style="{'height':imgGrid.half + 'px'}" :src="data.imgList[1]" @click="onPreviewImage(1)"
+							mode="aspectFill"></image>
+						<image :style="{'height':imgGrid.half + 'px'}" :src="data.imgList[2]" @click="onPreviewImage(2)"
+							mode="aspectFill"></image>
+					</view>
+					<view class="img-row">
+						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[3]" @click="onPreviewImage(3)"
+							mode="aspectFill"></image>
+						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[4]" @click="onPreviewImage(4)"
+							mode="aspectFill"></image>
+						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[5]" @click="onPreviewImage(5)"
+							mode="aspectFill"></image>
+					</view>
+				</view>
+				<view v-if="data.imgList.length == 7" class="img-column">
+					<view class="img-row">
+						<image :src="data.imgList[0]" @click="onPreviewImage(0)"  mode="widthFix"></image>
 					</view>
 					<view class="img-row">
 						<view style="width: 70%;">
-							<image :style="{'height':imgGrid.twoThirds + 'px'}" :src="imgList[1]"
+							<image :style="{'height':imgGrid.twoThirds + 'px'}" :src="data.imgList[1]"
 								@click="onPreviewImage(1)" mode="aspectFill">
 							</image>
 						</view>
 						<view style="width: 30%;" class="img-column">
-							<image :style="{'height':imgGrid.third + 'px'}" :src="imgList[2]" @click="onPreviewImage(2)"
+							<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[2]" @click="onPreviewImage(2)"
 								mode="aspectFill"></image>
-							<image :style="{'height':imgGrid.third + 'px'}" :src="imgList[3]" @click="onPreviewImage(3)"
+							<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[3]" @click="onPreviewImage(3)"
 								mode="aspectFill"></image>
 						</view>
 					</view>
 					<view class="img-row">
-						<image :style="{'height':imgGrid.third + 'px'}" :src="imgList[4]" @click="onPreviewImage(4)"
+						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[4]" @click="onPreviewImage(4)"
 							mode="aspectFill"></image>
-						<image :style="{'height':imgGrid.third + 'px'}" :src="imgList[5]" @click="onPreviewImage(5)"
+						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[5]" @click="onPreviewImage(5)"
 							mode="aspectFill"></image>
-						<image :style="{'height':imgGrid.third + 'px'}" :src="imgList[6]" @click="onPreviewImage(6)"
-							mode="aspectFill"></image>
-					</view>
-				</view>
-				<view v-if="imgList.length == 8" class="img-column">
-					<view class="img-row">
-						<image :src="imgList[0]" @click="onPreviewImage(0)"></image>
-					</view>
-					<view class="img-row">
-						<image :style="{'height':imgGrid.half + 'px'}" :src="imgList[1]" @click="onPreviewImage(1)"
-							mode="aspectFill"></image>
-						<image :style="{'height':imgGrid.half + 'px'}" :src="imgList[2]" @click="onPreviewImage(2)"
-							mode="aspectFill"></image>
-					</view>
-					<view class="img-row">
-						<image :style="{'height':imgGrid.half + 'px'}" :src="imgList[3]" @click="onPreviewImage(3)"
-							mode="aspectFill"></image>
-						<image :style="{'height':imgGrid.half + 'px'}" :src="imgList[4]" @click="onPreviewImage(4)"
-							mode="aspectFill"></image>
-					</view>
-					<view class="img-row">
-						<image :style="{'height':imgGrid.third + 'px'}" :src="imgList[5]" @click="onPreviewImage(5)"
-							mode="aspectFill"></image>
-						<image :style="{'height':imgGrid.third + 'px'}" :src="imgList[6]" @click="onPreviewImage(6)"
-							mode="aspectFill"></image>
-						<image :style="{'height':imgGrid.third + 'px'}" :src="imgList[7]" @click="onPreviewImage(7)"
+						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[6]" @click="onPreviewImage(6)"
 							mode="aspectFill"></image>
 					</view>
 				</view>
-				<view v-if="imgList.length == 9" class="img-column">
+				<view v-if="data.imgList.length == 8" class="img-column">
 					<view class="img-row">
-						<image :src="imgList[0]" @click="onPreviewImage(0)"></image>
+						<image :src="data.imgList[0]" @click="onPreviewImage(0)"  mode="widthFix"></image>
 					</view>
 					<view class="img-row">
-						<image :src="imgList[1]" @click="onPreviewImage(1)"></image>
-					</view>
-					<view class="img-row">
-						<image :style="{'height':imgGrid.half + 'px'}" :src="imgList[2]" @click="onPreviewImage(2)"
+						<image :style="{'height':imgGrid.half + 'px'}" :src="data.imgList[1]" @click="onPreviewImage(1)"
 							mode="aspectFill"></image>
-						<image :style="{'height':imgGrid.half + 'px'}" :src="imgList[3]" @click="onPreviewImage(3)"
+						<image :style="{'height':imgGrid.half + 'px'}" :src="data.imgList[2]" @click="onPreviewImage(2)"
 							mode="aspectFill"></image>
 					</view>
 					<view class="img-row">
-						<image :style="{'height':imgGrid.half + 'px'}" :src="imgList[4]" @click="onPreviewImage(4)"
+						<image :style="{'height':imgGrid.half + 'px'}" :src="data.imgList[3]" @click="onPreviewImage(3)"
 							mode="aspectFill"></image>
-						<image :style="{'height':imgGrid.half + 'px'}" :src="imgList[5]" @click="onPreviewImage(5)"
+						<image :style="{'height':imgGrid.half + 'px'}" :src="data.imgList[4]" @click="onPreviewImage(4)"
 							mode="aspectFill"></image>
 					</view>
 					<view class="img-row">
-						<image :style="{'height':imgGrid.third + 'px'}" :src="imgList[6]" @click="onPreviewImage(6)"
+						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[5]" @click="onPreviewImage(5)"
 							mode="aspectFill"></image>
-						<image :style="{'height':imgGrid.third + 'px'}" :src="imgList[7]" @click="onPreviewImage(7)"
+						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[6]" @click="onPreviewImage(6)"
 							mode="aspectFill"></image>
-						<image :style="{'height':imgGrid.third + 'px'}" :src="imgList[8]" @click="onPreviewImage(8)"
+						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[7]" @click="onPreviewImage(7)"
+							mode="aspectFill"></image>
+					</view>
+				</view>
+				<view v-if="data.imgList.length == 9" class="img-column">
+					<view class="img-row">
+						<image :src="data.imgList[0]" @click="onPreviewImage(0)" mode="widthFix"></image>
+					</view>
+					<view class="img-row">
+						<image :src="data.imgList[1]" @click="onPreviewImage(1)" mode="widthFix"></image>
+					</view>
+					<view class="img-row">
+						<image :style="{'height':imgGrid.half + 'px'}" :src="data.imgList[2]" @click="onPreviewImage(2)"
+							mode="aspectFill"></image>
+						<image :style="{'height':imgGrid.half + 'px'}" :src="data.imgList[3]" @click="onPreviewImage(3)"
+							mode="aspectFill"></image>
+					</view>
+					<view class="img-row">
+						<image :style="{'height':imgGrid.half + 'px'}" :src="data.imgList[4]" @click="onPreviewImage(4)"
+							mode="aspectFill"></image>
+						<image :style="{'height':imgGrid.half + 'px'}" :src="data.imgList[5]" @click="onPreviewImage(5)"
+							mode="aspectFill"></image>
+					</view>
+					<view class="img-row">
+						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[6]" @click="onPreviewImage(6)"
+							mode="aspectFill"></image>
+						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[7]" @click="onPreviewImage(7)"
+							mode="aspectFill"></image>
+						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[8]" @click="onPreviewImage(8)"
 							mode="aspectFill"></image>
 					</view>
 				</view>
@@ -217,7 +217,7 @@
 				<view class="divider"></view>
 			</view>
 			<view class="input-column">
-				<image class="avatar" :src="user.avatarUrl"></image>
+				<image class="avatar" :src="data.user.avatarUrl"></image>
 				<input class="msg-input" placeholder="看对眼就留言,问问更多细节~" disabled="true" @click="onMsgInputClick" />
 			</view>
 			<leave-message :list="leavelist"></leave-message>
@@ -240,7 +240,7 @@
 						<text>留言</text>
 					</view>
 					<view class="btn-item" @click="onStarClick">
-						<uni-icons :type="hasStar?'star-filled':'star'" size="25" :color="hasStar?'#fae441':''"></uni-icons>
+						<uni-icons :type="data.hasStar?'star-filled':'star'" size="25" :color="data.hasStar?'#fae441':''"></uni-icons>
 						<text>收藏</text>
 					</view>
 				</view>
@@ -258,9 +258,19 @@
 
 <script>
 	import LeaveMessage from '@/components/leave-message/leave-message.vue'
+	import {getDetail} from '@/api/commodity.js'
 	export default {
 		components: {
 			LeaveMessage
+		},
+		onLoad(option) {
+			console.log("params----:"+JSON.stringify(option))
+			const params = JSON.parse(decodeURIComponent(option.params));
+			console.log("params----===:"+decodeURIComponent(option.params))
+			const commodityId = params.id
+			getDetail(commodityId).then(res=>{
+				this.data = res.data.data;
+			})
 		},
 		onShow() {
 			const that = this;
@@ -283,39 +293,41 @@
 					twoThirds: 0, //三分之二
 					third: 0 //三分之一
 				},
-				user: {
-					nickName: "咸鱼用户",
-					location: "成都 金牛区",
-					avatarUrl: "../../static/logo.png"
+				data:{
+					user: {
+						nickName: "咸鱼用户",
+						location: "成都 金牛区",
+						avatarUrl: "../../static/logo.png"
+					},
+					hasConcern: true,
+					hasStar:false,
+					price: 30,
+					originalPrice: 1500,
+					fineness: "几乎全新",
+					wantCount: 10,
+					browseCount: 371,
+					deliveryMode: "包邮|自提",
+					content: "阿三顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶阿三顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶阿三顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶阿三顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶",
+					attributeList: [{
+							name: "品牌",
+							value: "力顶三水水水水"
+						},
+						{
+							name: "成色",
+							value: "几乎全新"
+						},
+						{
+							name: "鞋码",
+							value: "37"
+						}
+					],
+					imgList: [
+						"https://img0.baidu.com/it/u=677049855,3088468346&fm=253&fmt=auto&app=138&f=JPEG?w=893&h=500",
+						"https://img0.baidu.com/it/u=2907827215,3626437672&fm=253&fmt=auto&app=138&f=JPEG?w=667&h=500",
+						"https://img0.baidu.com/it/u=2907827215,3626437672&fm=253&fmt=auto&app=138&f=JPEG?w=667&h=500",
+						"https://img0.baidu.com/it/u=2191797810,1155915308&fm=253&fmt=auto&app=138&f=JPEG?w=758&h=500",
+					]
 				},
-				hasConcern: true,
-				hasStar:false,
-				price: 30,
-				originalPrice: 1500,
-				fineness: "几乎全新",
-				wantCount: 10,
-				browseCount: 371,
-				deliveryMode: "包邮|自提",
-				content: "阿三顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶阿三顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶阿三顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶阿三顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶",
-				attributeList: [{
-						name: "品牌",
-						value: "力顶三水水水水"
-					},
-					{
-						name: "成色",
-						value: "几乎全新"
-					},
-					{
-						name: "鞋码",
-						value: "37"
-					}
-				],
-				imgList: [
-					"https://img0.baidu.com/it/u=677049855,3088468346&fm=253&fmt=auto&app=138&f=JPEG?w=893&h=500",
-					"https://img0.baidu.com/it/u=2907827215,3626437672&fm=253&fmt=auto&app=138&f=JPEG?w=667&h=500",
-					"https://img0.baidu.com/it/u=2907827215,3626437672&fm=253&fmt=auto&app=138&f=JPEG?w=667&h=500",
-					"https://img0.baidu.com/it/u=2191797810,1155915308&fm=253&fmt=auto&app=138&f=JPEG?w=758&h=500",
-				],
 				leavelist: [{
 					user: {
 						avatarUrl: "https://pic1.zhimg.com/v2-dcb4723cec102a710ff5fed1251012a1_xs.jpg?source=172ae18b",

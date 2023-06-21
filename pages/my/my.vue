@@ -89,19 +89,27 @@
 			this.initPage();
 		},
 		methods: {
-			exit(){
+			exit() {
 				// 同步清空本地缓存
 				uni.clearStorageSync();
 				this.initUserInfo();
 				uni.showToast({
-					title:"退出成功"
+					title: "退出成功"
 				})
 			},
 			onLogin() {
+
 				if (!this.user.hasLogin) {
-					uni.navigateTo({
-						url: '/pages/login/login'
-					})
+					const hasRegister = uni.getStorageSync("hasRegister");
+					if (hasRegister) {
+						uni.navigateTo({
+							url: '/pages/login/login'
+						})
+					} else {
+						uni.navigateTo({
+							url: '/pages/login/register'
+						})
+					}
 				}
 			},
 			initPage() {
@@ -133,16 +141,19 @@
 	.container {
 		.page-content {
 			margin: 0px 10px;
+
 			.head-wrapper {
 				height: 80px;
 				display: flex;
 				align-items: center;
+
 				.head-left {
 					flex: 1;
 					display: flex;
 					align-items: center;
+
 					.avatar {
-						display: block!important;
+						display: block !important;
 						width: 60px;
 						height: 60px;
 						border-radius: 30px;

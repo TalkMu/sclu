@@ -1,8 +1,8 @@
 <template>
 	<view class="commodity-list">
 		
-		<view v-for="(item,index) of commodityList" class="commodity-item" @click="onCommodityItemClick">
-			<image class="cover-img" :src="item.coverImgUrl" mode="widthFix"></image>
+		<view v-for="(item,index) of commodityList" class="commodity-item" @click="onCommodityItemClick(item)">
+			<image class="cover-img" :src="item.mainCoverUrl" mode="widthFix"></image>
 			<view class="detail-content">
 				<view v-if="item.hasFreeShipping" class="left">
 					<text class="free-shipping">包邮</text>
@@ -56,9 +56,9 @@
 			}
 		},
 		methods:{
-			onCommodityItemClick(){
+			onCommodityItemClick(item){
 				uni.navigateTo({
-					url:'/pages/commodity/commodity'
+					url:'/pages/commodity/commodity?params='+ encodeURIComponent(JSON.stringify(item))
 				})
 			}
 		}
@@ -75,6 +75,7 @@
 		
 			.cover-img {
 				width: 100%;
+				border-radius: 10px;
 			}
 		
 			.detail-content {

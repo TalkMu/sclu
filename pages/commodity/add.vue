@@ -104,9 +104,6 @@
 </template>
 
 <script>
-	import {
-		uploadFiles
-	} from '/api/common.js'
 	import {list as getCategoryList} from '/api/commodity_category.js'
 	import {add} from '@/api/commodity.js'
 	import {handleTree} from '@/utils/tools.js'
@@ -227,12 +224,12 @@
 			uploadImg(){
 				const that = this;
 				const len = this.form.imgList.length
+				const arr = [];
 				return new Promise((resolve, reject)=>{
-					const arr = [];
 					const _that = that;
 					for(let i=0; i<that.form.imgList.length; i++ ){
 						uni.uploadFile({
-							url:"http://192.168.50.40:8080/common/upload",
+							url:that.$baseUrl + "/common/upload",
 							filePath:this.form.imgList[i].url,
 							name:"file",
 							success: (res) => {
@@ -267,7 +264,16 @@
 					}
 					console.log("onSubmit:" + JSON.stringify(params));
 					add(params).then(res=>{
+						const data = res.data;
 						console.log("add-commodity-res:" + JSON.stringify(res));
+						if(data.code == 200){
+							const params = {
+								id:data.data
+							}
+							uni.redirectTo({
+								url:"/pages/commodity/commodity?params="+JSON.stringify(params)
+							})
+						}
 					})
 				})
 			},

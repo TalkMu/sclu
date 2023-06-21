@@ -1,34 +1,24 @@
 <template>
 	<view class="container">
-
-		<form @submit="onSubmit" @reset="onFormReSet">
-			<button open-type="chooseAvatar" class="avatar-wrapper" @chooseavatar="onChooseAvatar">
-				<image :src="avatarUrl" class="avatar"></image>
-			</button>
-			<view class="describe">
-				<text>点击可获取头像</text>
-			</view>
-			<view class="nick-name-wrapper">
-				<input type="nickname" name="nickName" class="nick-name-input" placeholder="请输入昵称" v-model="nickName" />
-			</view>
-			<view class="submit-wrapper">
-				<button type="primary" form-type="submit" class="submit-btn">注册</button>
-				<button type="default" class="cancel-btn" @click="uni.navigateBack()">取消</button>
-			</view>
-		</form>
+		<view class="logo-wrapper">
+			<image :src="logoUrl" class="logo"></image>
+		</view>
+		<view class="submit-wrapper">
+			<button type="primary" class="submit-btn" @click="onSubmit()">微信一键登录</button>
+			<button type="default" class="cancel-btn" @click="uni.navigateBack()">取消</button>
+		</view>
 
 	</view>
 </template>
 
 <script>
 	import {
-		login
+		getToken,getInfo
 	} from '/api/user.js'
 	export default {
 		data() {
 			return {
-				avatarUrl: "https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0",
-				nickName: "",
+				logoUrl: "https://pic1.zhimg.com/v2-dcb4723cec102a710ff5fed1251012a1_xs.jpg?source=172ae18b",
 			};
 		},
 		onLoad() {
@@ -60,21 +50,13 @@
 					});
 				})
 			},
-			onSubmit(e) {
+			onSubmit() {
+				const appId = this.$appId;
 				const params = {
-					avatarUrl: this.avatarUrl,
-					nickName: e.detail.value.nickName,
 					code: "",
-					appId: "wx63e671fedd368bc5",
+					appId: appId,
 					iv:"",
 					encryptedData:"",
-				}
-				if(params.nickName == ""){
-					uni.showToast({
-						title: '请输入昵称',
-						duration: 2000
-					});
-					return;
 				}
 				const that = this;
 				uni.getUserProfile({
@@ -85,10 +67,19 @@
 						params.encryptedData = infoRes.encryptedData
 						that.getLoginCode().then((code)=>{
 							params.code = code;
-							login(params).then(res=>{
+							getToken(params).then(res=>{
 								console.log(JSON.stringify(res));
 								const token = res.data.token
 								uni.setStorageSync("token", token)
+								getInfo().then(res=>{
+									const userInfo = res.data.user
+									uni.setStorageSync("userInfo",{
+										avatarUrl:userInfo.avatar,
+										nickName:userInfo.nickName,
+										hasLogin:true,
+									})
+									uni.navigateBack()
+								})
 							})
 						})
 						
@@ -100,9 +91,8 @@
 				uni.setStorageSync("userInfo",{
 					avatarUrl:params.avatarUrl,
 					nickName:params.nickName,
-					hasLogin:true,
 				})
-				uni.navigateBack()
+				
 			},
 			onFormReSet() {},
 			onChooseAvatar(e) {
@@ -117,13 +107,11 @@
 		padding: 50px 20px 0px 20px;
 		background-color: #fff;
 
-		.avatar-wrapper {
-			padding: 0px;
-			width: 100px !important;
-			height: 100px !important;
-			border-radius: 50px;
-
-			.avatar {
+		.logo-wrapper {
+			text-align: center;
+			display: flex;
+			justify-content: center;
+			.logo {
 				display: block;
 				width: 100px;
 				height: 100px;
@@ -131,26 +119,6 @@
 
 			}
 		}
-
-		.describe {
-			margin-top: 10px;
-			width: 100%;
-			text-align: center;
-			color: #999;
-			font-size: 12px;
-		}
-
-		.nick-name-wrapper {
-			margin-top: 20px;
-
-			.nick-name-input {
-				text-align: center;
-				height: 40px;
-				background-color: #f7f7f7;
-				border-radius: 20px;
-			}
-		}
-
 		.submit-wrapper {
 			margin-top: 40px;
 
