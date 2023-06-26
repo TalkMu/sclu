@@ -34,7 +34,7 @@
 			<view class="content-column">
 				{{data.content}}
 			</view>
-			<view class="attribute-column">
+			<view class="attribute-column" v-if="data.attributeList">
 				<view style="display: flex;overflow: auto;white-space: nowrap;">
 					<view v-for="(item,index) of data.attributeList">
 						<view class="attribute-item">
@@ -55,15 +55,15 @@
 				</view>
 				<view v-if="data.imgList.length == 2" class="img-column">
 					<view class="img-row">
-						<image :src="data.imgList[0]" @click="onPreviewImage(0)"  mode="widthFix"></image>
+						<image :src="data.imgList[0]" @click="onPreviewImage(0)" mode="widthFix"></image>
 					</view>
 					<view class="img-row">
-						<image :src="data.imgList[1]" @click="onPreviewImage(1)"  mode="widthFix"></image>
+						<image :src="data.imgList[1]" @click="onPreviewImage(1)" mode="widthFix"></image>
 					</view>
 				</view>
 				<view v-if="data.imgList.length == 3" class="img-column">
 					<view class="img-row">
-						<image :src="data.imgList[0]" @click="onPreviewImage(0)"  mode="widthFix"></image>
+						<image :src="data.imgList[0]" @click="onPreviewImage(0)" mode="widthFix"></image>
 					</view>
 					<view class="img-row">
 						<image :style="{'height':imgGrid.half + 'px'}" :src="data.imgList[1]" @click="onPreviewImage(1)"
@@ -74,7 +74,7 @@
 				</view>
 				<view v-if="data.imgList.length == 4" class="img-column">
 					<view class="img-row">
-						<image :src="data.imgList[0]" @click="onPreviewImage(0)"  mode="widthFix"></image>
+						<image :src="data.imgList[0]" @click="onPreviewImage(0)" mode="widthFix"></image>
 					</view>
 					<view class="img-row">
 						<view style="width: 70%;">
@@ -83,16 +83,16 @@
 							</image>
 						</view>
 						<view style="width: 30%;" class="img-column">
-							<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[2]" @click="onPreviewImage(2)"
-								mode="aspectFill"></image>
-							<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[3]" @click="onPreviewImage(3)"
-								mode="aspectFill"></image>
+							<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[2]"
+								@click="onPreviewImage(2)" mode="aspectFill"></image>
+							<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[3]"
+								@click="onPreviewImage(3)" mode="aspectFill"></image>
 						</view>
 					</view>
 				</view>
 				<view v-if="data.imgList.length == 5" class="img-column">
 					<view class="img-row">
-						<image :src="data.imgList[0]" @click="onPreviewImage(0)"  mode="widthFix"></image>
+						<image :src="data.imgList[0]" @click="onPreviewImage(0)" mode="widthFix"></image>
 					</view>
 					<view class="img-row">
 						<image :style="{'height':imgGrid.half + 'px'}" :src="data.imgList[1]" @click="onPreviewImage(1)"
@@ -109,7 +109,7 @@
 				</view>
 				<view v-if="data.imgList.length == 6" class="img-column">
 					<view class="img-row">
-						<image :src="data.imgList[0]" @click="onPreviewImage(0)"  mode="widthFix"></image>
+						<image :src="data.imgList[0]" @click="onPreviewImage(0)" mode="widthFix"></image>
 					</view>
 					<view class="img-row">
 						<image :style="{'height':imgGrid.half + 'px'}" :src="data.imgList[1]" @click="onPreviewImage(1)"
@@ -118,17 +118,17 @@
 							mode="aspectFill"></image>
 					</view>
 					<view class="img-row">
-						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[3]" @click="onPreviewImage(3)"
-							mode="aspectFill"></image>
-						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[4]" @click="onPreviewImage(4)"
-							mode="aspectFill"></image>
-						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[5]" @click="onPreviewImage(5)"
-							mode="aspectFill"></image>
+						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[3]"
+							@click="onPreviewImage(3)" mode="aspectFill"></image>
+						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[4]"
+							@click="onPreviewImage(4)" mode="aspectFill"></image>
+						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[5]"
+							@click="onPreviewImage(5)" mode="aspectFill"></image>
 					</view>
 				</view>
 				<view v-if="data.imgList.length == 7" class="img-column">
 					<view class="img-row">
-						<image :src="data.imgList[0]" @click="onPreviewImage(0)"  mode="widthFix"></image>
+						<image :src="data.imgList[0]" @click="onPreviewImage(0)" mode="widthFix"></image>
 					</view>
 					<view class="img-row">
 						<view style="width: 70%;">
@@ -137,24 +137,24 @@
 							</image>
 						</view>
 						<view style="width: 30%;" class="img-column">
-							<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[2]" @click="onPreviewImage(2)"
-								mode="aspectFill"></image>
-							<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[3]" @click="onPreviewImage(3)"
-								mode="aspectFill"></image>
+							<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[2]"
+								@click="onPreviewImage(2)" mode="aspectFill"></image>
+							<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[3]"
+								@click="onPreviewImage(3)" mode="aspectFill"></image>
 						</view>
 					</view>
 					<view class="img-row">
-						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[4]" @click="onPreviewImage(4)"
-							mode="aspectFill"></image>
-						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[5]" @click="onPreviewImage(5)"
-							mode="aspectFill"></image>
-						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[6]" @click="onPreviewImage(6)"
-							mode="aspectFill"></image>
+						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[4]"
+							@click="onPreviewImage(4)" mode="aspectFill"></image>
+						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[5]"
+							@click="onPreviewImage(5)" mode="aspectFill"></image>
+						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[6]"
+							@click="onPreviewImage(6)" mode="aspectFill"></image>
 					</view>
 				</view>
 				<view v-if="data.imgList.length == 8" class="img-column">
 					<view class="img-row">
-						<image :src="data.imgList[0]" @click="onPreviewImage(0)"  mode="widthFix"></image>
+						<image :src="data.imgList[0]" @click="onPreviewImage(0)" mode="widthFix"></image>
 					</view>
 					<view class="img-row">
 						<image :style="{'height':imgGrid.half + 'px'}" :src="data.imgList[1]" @click="onPreviewImage(1)"
@@ -169,12 +169,12 @@
 							mode="aspectFill"></image>
 					</view>
 					<view class="img-row">
-						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[5]" @click="onPreviewImage(5)"
-							mode="aspectFill"></image>
-						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[6]" @click="onPreviewImage(6)"
-							mode="aspectFill"></image>
-						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[7]" @click="onPreviewImage(7)"
-							mode="aspectFill"></image>
+						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[5]"
+							@click="onPreviewImage(5)" mode="aspectFill"></image>
+						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[6]"
+							@click="onPreviewImage(6)" mode="aspectFill"></image>
+						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[7]"
+							@click="onPreviewImage(7)" mode="aspectFill"></image>
 					</view>
 				</view>
 				<view v-if="data.imgList.length == 9" class="img-column">
@@ -197,12 +197,12 @@
 							mode="aspectFill"></image>
 					</view>
 					<view class="img-row">
-						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[6]" @click="onPreviewImage(6)"
-							mode="aspectFill"></image>
-						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[7]" @click="onPreviewImage(7)"
-							mode="aspectFill"></image>
-						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[8]" @click="onPreviewImage(8)"
-							mode="aspectFill"></image>
+						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[6]"
+							@click="onPreviewImage(6)" mode="aspectFill"></image>
+						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[7]"
+							@click="onPreviewImage(7)" mode="aspectFill"></image>
+						<image :style="{'height':imgGrid.third + 'px'}" :src="data.imgList[8]"
+							@click="onPreviewImage(8)" mode="aspectFill"></image>
 					</view>
 				</view>
 			</view>
@@ -211,16 +211,9 @@
 
 		</view>
 		<view class="leave-message-wrapper">
-			<view class="message-total">
-				<view class="divider"></view>
-				<text class="divider-text">{{leavelist?leavelist.length:0}}条留言</text>
-				<view class="divider"></view>
-			</view>
-			<view class="input-column">
-				<image class="avatar" :src="data.user.avatarUrl"></image>
-				<input class="msg-input" placeholder="看对眼就留言,问问更多细节~" disabled="true" @click="onMsgInputClick" />
-			</view>
-			<leave-message :list="leavelist"></leave-message>
+			
+			<leave-message ref="leaveMessageRef" :commodity-id="commodityId"></leave-message>
+			
 		</view>
 		<view class="homepage-wrapper">
 
@@ -231,16 +224,17 @@
 		<view class="bottom-nav-wrapper">
 			<view class="nav">
 				<view class="left-btn-list">
-					<view class="btn-item">
-						<uni-icons type="redo" size="25"></uni-icons>
+					<view class="btn-item" @click="onShareAppMessage">
+						<uni-icons type="redo" :size="25"></uni-icons>
 						<text>分享</text>
 					</view>
-					<view class="btn-item">
+					<view class="btn-item" @click="onLeaveClick">
 						<uni-icons type="chat" size="25"></uni-icons>
 						<text>留言</text>
 					</view>
 					<view class="btn-item" @click="onStarClick">
-						<uni-icons :type="data.hasStar?'star-filled':'star'" size="25" :color="data.hasStar?'#fae441':''"></uni-icons>
+						<uni-icons :type="data.hasStar?'star-filled':'star'" size="25"
+							:color="data.hasStar?'#fae441':''"></uni-icons>
 						<text>收藏</text>
 					</view>
 				</view>
@@ -253,22 +247,24 @@
 			</view>
 		</view>
 
+		
 	</view>
 </template>
 
 <script>
 	import LeaveMessage from '@/components/leave-message/leave-message.vue'
-	import {getDetail} from '@/api/commodity.js'
+	import {
+		getDetail
+	} from '@/api/commodity.js'
+	import {add as addStar,remove as removeStar} from '@/api/commodity_star.js'
 	export default {
 		components: {
 			LeaveMessage
 		},
 		onLoad(option) {
-			console.log("params----:"+JSON.stringify(option))
 			const params = JSON.parse(decodeURIComponent(option.params));
-			console.log("params----===:"+decodeURIComponent(option.params))
-			const commodityId = params.id
-			getDetail(commodityId).then(res=>{
+			this.commodityId = params.id
+			getDetail(this.commodityId).then(res => {
 				this.data = res.data.data;
 			})
 		},
@@ -287,20 +283,21 @@
 		},
 		data() {
 			return {
+				commodityId:null,
 				contentWidth: 0, //内容宽度
 				imgGrid: {
 					half: 0, //一半
 					twoThirds: 0, //三分之二
 					third: 0 //三分之一
 				},
-				data:{
+				data: {
 					user: {
 						nickName: "咸鱼用户",
 						location: "成都 金牛区",
 						avatarUrl: "../../static/logo.png"
 					},
 					hasConcern: true,
-					hasStar:false,
+					hasStar: false,
 					price: 30,
 					originalPrice: 1500,
 					fineness: "几乎全新",
@@ -328,67 +325,66 @@
 						"https://img0.baidu.com/it/u=2191797810,1155915308&fm=253&fmt=auto&app=138&f=JPEG?w=758&h=500",
 					]
 				},
-				leavelist: [{
-					user: {
-						avatarUrl: "https://pic1.zhimg.com/v2-dcb4723cec102a710ff5fed1251012a1_xs.jpg?source=172ae18b",
-						nickName: "咸鱼用户",
-						userId: 1,
-						ipTerritory: "四川"
-					},
-					hasSeller: false,
-					content: "宝贝还在吗？",
-					createTime: "1个月前",
-					hasLike: true,
-					replyList: [{
-							fromUser: {
-								avatarUrl: "https://pic1.zhimg.com/v2-dcb4723cec102a710ff5fed1251012a1_xs.jpg?source=172ae18b",
-								nickName: "咸鱼用户222",
-								userId: 3,
-								ipTerritory: "四川"
-							},
-							content: "老板还有吗？",
-							createTime: "1个月前",
-							hasSeller: false,
-							hasLike: false,
-							toUser: {
-								avatarUrl: "https://pic1.zhimg.com/v2-dcb4723cec102a710ff5fed1251012a1_xs.jpg?source=172ae18b",
-								nickName: "悦享家私",
-								userId: 2,
-								ipTerritory: "四川"
-							},
-						},
-						{
-							fromUser: {
-								avatarUrl: "https://pic1.zhimg.com/v2-dcb4723cec102a710ff5fed1251012a1_xs.jpg?source=172ae18b",
-								nickName: "悦享家私",
-								userId: 2,
-								ipTerritory: "四川"
-							},
-							hasSeller: true,
-							content: "在的，私聊！",
-							createTime: "1个月前",
-							hasLike: false,
-							toUser: null
-						}
-					]
-				}]
+				leavelist: []
 
 			}
 		},
+		onShareAppMessage(res) {
+			if (res.from === 'button') { // 来自页面内分享按钮
+				console.log(res.target)
+			}
+			const params = {
+				commodityId:this.commodityId
+			}
+			return {
+				title: this.data.content,
+				imageUrl:this.data.imgList[0],
+				path: '/pages/commodity/commodity?params='+encodeURIComponent(JSON.stringify(params))
+			}
+		},
 		methods: {
-			onStarClick(){
-				this.hasStar = !this.hasStar
+			onLeaveClick(){
+				this.$refs.leaveMessageRef.onMsgInputClick()
+			},
+			onStarClick() {
+				this.data.hasStar = !this.data.hasStar
+				const userInfo = uni.getStorageSync("userInfo")
+				const params = {
+					commodityId:this.commodityId,
+					userId:userInfo.userId
+				}
+				if(this.data.hasStar){
+					addStar(params).then(res=>{
+						if(res.data.code == 200){
+							uni.showToast({
+								title: '收藏成功',
+								duration: 1000
+							});
+						}
+					})
+				}else{
+					removeStar(params).then(res=>{
+						if(res.data.code == 200){
+							uni.showToast({
+								title: '取消收藏成功',
+								duration: 1000
+							});
+						}
+					})
+				}
+				
+				
 			},
 			onPreviewImage(index) {
 				uni.previewImage({
-					urls: this.imgList,
+					urls: this.data.imgList,
 					current: index,
 					loop: true
 				})
 			},
 			onConcernChange() {
-				this.hasConcern = !this.hasConcern;
-				if (this.hasConcern) {
+				this.data.hasConcern = !this.data.hasConcern;
+				if (this.data.hasConcern) {
 					uni.showToast({
 						title: '关注成功',
 						duration: 1000
@@ -633,12 +629,16 @@
 					align-items: center;
 					font-size: 12px;
 					color: #999;
-
 					.btn-item {
+						border: 0;
+						height: 100%;
+						padding: 0!important;
+						margin: 0!important;
 						width: 100%;
 						display: flex;
 						flex-direction: column;
 						align-items: center;
+						justify-content: center;
 					}
 				}
 
@@ -668,51 +668,31 @@
 		.leave-message-wrapper {
 			padding: 10px;
 			background-color: #fff;
-			.message-total {
-				width: 100%;
-				display: flex;
-				align-items: center;
-			
-				.divider {
-					width: 35%;
-					height: 1px;
-					border-top: 1px #999 dashed;
-					margin: 0;
-					vertical-align: middle;
-				}
-			
-				.divider-text {
-					text-align: center;
-					width: 30%;
-					color: #999;
-					font-size: 16px;
-				}
-			}
-			
-			.input-column {
-				padding: 10px 0px;
-				display: flex;
-				align-items: center;
-			
-				.avatar {
-					width: 30px;
-					height: 30px;
-					border-radius: 15px;
-				}
-			
-				.msg-input {
-					padding: 0px 10px;
-					background-color: #f7f7f7;
-					flex: 1;
-					margin: 0px 10px;
-					font-size: 14px;
-					height: 30px;
-					line-height: 30px;
-					border-radius: 15px;
-				}
-			}
 		}
 
-		
+		.comment-dialog{
+			position: fixed;
+			bottom: 0;
+			left: 0;
+			width: 100%;
+			background-color: #fff;
+			border-radius: 10px;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			padding: 10px 0;
+			.comment-input{
+				height: 30px;
+				padding: 5px 5px;
+				background-color: #f5f5f5;
+				color: #b4b4b4;
+				border-radius: 10px;
+				flex: 1;
+				margin-left: 10px;
+			}
+			.comment-submit{
+				margin-right: 10px;
+			}
+		}
 	}
 </style>

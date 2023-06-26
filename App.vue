@@ -97,6 +97,9 @@
 	@import '@/uni_modules/uni-scss/index.scss';
 	/* #ifndef APP-NVUE */
 	@import '@/static/customicons.css';
+	
+	// 主色调
+	$xzm-main-bg-color:#fae441;
 
 	// 设置整个项目的背景色
 	page {

@@ -1,12 +1,21 @@
 <template>
 	<view class="container">
-		<view class="logo-wrapper">
-			<image :src="logoUrl" class="logo"></image>
-		</view>
-		<view class="submit-wrapper">
-			<button type="primary" class="submit-btn" @click="onSubmit()">微信一键登录</button>
-			<button type="default" class="cancel-btn" @click="uni.navigateBack()">取消</button>
-		</view>
+
+		<form @submit="onSubmit" @reset="onFormReSet">
+			<button open-type="chooseAvatar" class="avatar-wrapper" @chooseavatar="onChooseAvatar">
+				<image :src="avatarUrl" class="avatar"></image>
+			</button>
+			<view class="describe">
+				<text>点击可获取头像</text>
+			</view>
+			<view class="nick-name-wrapper">
+				<input type="nickname" name="nickName" class="nick-name-input" placeholder="请输入昵称" v-model="nickName" />
+			</view>
+			<view class="submit-wrapper">
+				<button type="primary" form-type="submit" class="submit-btn">注册</button>
+				<button type="default" class="cancel-btn" @click="uni.navigateBack()">取消</button>
+			</view>
+		</form>
 
 	</view>
 </template>
@@ -18,7 +27,8 @@
 	export default {
 		data() {
 			return {
-				logoUrl: "https://pic1.zhimg.com/v2-dcb4723cec102a710ff5fed1251012a1_xs.jpg?source=172ae18b",
+				avatarUrl: "https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0",
+				nickName: "",
 			};
 		},
 		onLoad() {
@@ -50,13 +60,22 @@
 					});
 				})
 			},
-			onSubmit() {
+			onSubmit(e) {
 				const appId = this.$appId;
 				const params = {
+					avatarUrl: this.avatarUrl,
+					nickName: e.detail.value.nickName,
 					code: "",
 					appId: appId,
 					iv:"",
 					encryptedData:"",
+				}
+				if(params.nickName == ""){
+					uni.showToast({
+						title: '请输入昵称',
+						duration: 2000
+					});
+					return;
 				}
 				const that = this;
 				uni.getUserProfile({
@@ -79,8 +98,8 @@
 										userId:userInfo.userId,
 										hasLogin:true,
 									})
-									uni.navigateBack()
 								})
+								uni.navigateBack()
 							})
 						})
 						
@@ -92,7 +111,16 @@
 			},
 			onFormReSet() {},
 			onChooseAvatar(e) {
-				this.avatarUrl = e.detail.avatarUrl;
+				const url = this.$baseUrl + "/common/upload";
+				uni.uploadFile({
+					url:url,
+					filePath:e.detail.avatarUrl,
+					name:"file",
+					success: (res) => {
+						const result = JSON.parse(res.data)
+						this.avatarUrl = result.url;
+					}
+				})
 			}
 		}
 	}
@@ -103,11 +131,13 @@
 		padding: 50px 20px 0px 20px;
 		background-color: #fff;
 
-		.logo-wrapper {
-			text-align: center;
-			display: flex;
-			justify-content: center;
-			.logo {
+		.avatar-wrapper {
+			padding: 0px;
+			width: 100px !important;
+			height: 100px !important;
+			border-radius: 50px;
+
+			.avatar {
 				display: block;
 				width: 100px;
 				height: 100px;
@@ -115,6 +145,26 @@
 
 			}
 		}
+
+		.describe {
+			margin-top: 10px;
+			width: 100%;
+			text-align: center;
+			color: #999;
+			font-size: 12px;
+		}
+
+		.nick-name-wrapper {
+			margin-top: 20px;
+
+			.nick-name-input {
+				text-align: center;
+				height: 40px;
+				background-color: #f7f7f7;
+				border-radius: 20px;
+			}
+		}
+
 		.submit-wrapper {
 			margin-top: 40px;
 

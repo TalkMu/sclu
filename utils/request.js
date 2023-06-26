@@ -1,4 +1,5 @@
 const BASE_URL = "http://home.koolss.com:9090"
+// const BASE_URL = "http://192.168.50.40:8080"
 
 export default async function request(options){
   const { url, data, method = 'GET',params} = options
@@ -14,8 +15,7 @@ export default async function request(options){
 	  header['Authorization'] = token
   }
   
-  if (method.toUpperCase() == 'POST' && 
-  data != null && 
+  if (data != null && 
   data != '') {
     header['content-type'] = 'application/json'
   }

@@ -1,7 +1,7 @@
 <template>
 	<view class="container">
 		<view class="tabbar-list">
-			<view class="tabbar-item" v-for="(item, index) in tabBar.list" @click="changeItem(item,index)">
+			<view class="tabbar-item" :class="[item.bulge ? ' tabbar-item-bulge' : '']" v-for="(item, index) in tabBar.list1" @click="changeItem(item,index)">
 				<view class="item-top" :class="[item.bulge ? ' bulge' : '']">
 					<uni-icons :color="currentItem == index || item.bulge ? '#fae441' : ''" custom-prefix="iconfont"
 						:type="currentItem == index ? item.selectedIconPath : item.iconPath"
@@ -62,6 +62,28 @@
 							text: "我的",
 							bulge: false
 						}
+					],
+					list1: [{
+							iconPath: "icon-home",
+							selectedIconPath: "icon-homefill",
+							pagePath: "/pages/index/index",
+							text: "首页",
+							bulge: false
+						}, 
+						{
+							iconPath: "icon-roundaddfill",
+							selectedIconPath: "icon-roundaddfill",
+							pagePath: "/pages/publish/publish",
+							text: "",
+							bulge: true
+						}, 
+						{
+							iconPath: "icon-my",
+							selectedIconPath: "icon-myfill",
+							pagePath: "/pages/my/my",
+							text: "我的",
+							bulge: false
+						}
 					]
 				}
 			};
@@ -114,7 +136,7 @@
 			display: flex;
 			.tabbar-item {
 				height: 80px;
-				width: 20%;
+				width: 33%;
 				display: flex;
 				flex-direction: column;
 				justify-content: center;
@@ -148,7 +170,9 @@
 					background-color: #ffffff;
 				}
 			}
-
+			.tabbar-item-bulge{
+				width: 34%;
+			}
 			.publish-list {
 				background-color: #ffffff;
 				width: 100%;

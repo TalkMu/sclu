@@ -28,14 +28,10 @@
 						<text class="number">55</text>
 						<text>粉丝</text>
 					</view>
-					<view class="item">
-						<text class="number">2</text>
-						<text>帖子</text>
-					</view>
 				</view>
 			</view>
-			<view class="divider"></view>
-			<view class="transaction-wrapper">
+			<!-- <view class="divider"></view> -->
+			<!-- <view class="transaction-wrapper">
 				<view class="title-wrapper">
 					<text class="title">我的交易</text>
 					<text class="totalIncome">在咸鱼赚了{{transactionData.totalIncome}}元</text>
@@ -46,16 +42,36 @@
 						<text>{{item.text}}</text>
 					</view>
 				</view>
-			</view>
+			</view> -->
+			<view class="list-wrapper">
+				<uni-list>
+					<tm-list-item title="我的发布" showArrow clickable :extra-icon="extraIcon.fabu" @click="toMyPublishPage" />
+					<tm-list-item title="意见反馈" showArrow :extra-icon="extraIcon.fankui" open-type="feedback" />
+					<tm-list-item title="联系客服" showArrow :extra-icon="extraIcon.kefu" open-type="contact" />
+					<tm-list-item title="清除缓存" showArrow clickable :extra-icon="extraIcon.qingchuhuancun"
+						@click="onClearCache" />
+					<tm-list-item title="分享应用" showArrow clickable :extra-icon="extraIcon.fenxiang" open-type="share"
+						/>
+				</uni-list>
+			</view>	
 		</view>
 		<view class="tab-bar">
-			<tm-tab-bar :currentPage="4"></tm-tab-bar>
+			<tm-tab-bar :currentPage="2"></tm-tab-bar>
 		</view>
 	</view>
 </template>
 
 <script>
 	export default {
+		onShareAppMessage(res) {
+			if (res.from === 'button') { // 来自页面内分享按钮
+				console.log(res.target)
+			}
+			return {
+				title: '自定义分享标题',
+				path: '/pages/index/index'
+			}
+		},
 		data() {
 			return {
 				user: {
@@ -82,13 +98,61 @@
 						iconPath: "/static/logo.png",
 						text: "我发布的 38",
 					}
-				]
+				],
+				extraIcon: {
+					fabu: {
+						color: '#2f2f2f',
+						size: '25',
+						type: 'icon-fabu',
+						customPrefix: 'iconfont'
+					},
+					qingchuhuancun: {
+						color: '#2f2f2f',
+						size: '25',
+						type: 'icon-qingchuhuancun',
+						customPrefix: 'iconfont'
+					},
+					kefu: {
+						color: '#2f2f2f',
+						size: '25',
+						type: 'icon-kefu',
+						customPrefix: 'iconfont'
+					},
+					fankui: {
+						color: '#2f2f2f',
+						size: '25',
+						type: 'icon-fankui',
+						customPrefix: 'iconfont'
+					},
+					fenxiang: {
+						color: '#2f2f2f',
+						size: '25',
+						type: 'icon-fenxiang',
+						customPrefix: 'iconfont'
+					}
+				}
 			};
 		},
 		onShow() {
 			this.initPage();
 		},
 		methods: {
+			toMyPublishPage(){
+				const params = {
+					status:'my'
+				}
+				uni.navigateTo({
+					url:'/pages/commodity/list?params=' + encodeURIComponent(JSON.stringify(params))
+				})
+			},
+			onClearCache() {
+				// 同步清空本地缓存
+				uni.clearStorageSync();
+				this.initUserInfo();
+				uni.showToast({
+					title: "清除成功"
+				})
+			},
 			exit() {
 				// 同步清空本地缓存
 				uni.clearStorageSync();
@@ -141,6 +205,9 @@
 	.container {
 		.page-content {
 			margin: 0px 10px;
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
 
 			.head-wrapper {
 				height: 80px;
@@ -173,7 +240,10 @@
 			}
 
 			.grid-wrapper {
-				margin-top: 20px;
+				background-color: #fff;
+				border-radius: 20px;
+				overflow: hidden;
+				padding: 5px 0px;
 				font-size: 14px;
 
 				.grid-list {
@@ -182,7 +252,7 @@
 					height: 60px;
 					width: 100%;
 					align-items: center;
-					justify-content: space-between;
+					justify-content: space-around;
 
 					.item {
 						height: 60px;
@@ -240,6 +310,36 @@
 							margin-top: 5px;
 							font-size: 12px;
 						}
+					}
+				}
+			}
+
+			.list-wrapper {
+				border-radius: 20px;
+				overflow: hidden;
+
+				.cell-btn {
+					padding: 0 10px 0 15px;
+					border: 0;
+					font-size: 14px;
+					height: 50px;
+					width: 100%;
+					display: flex;
+					align-items: center;
+
+					.item-left {
+						display: flex;
+						align-items: center;
+						flex: 1;
+
+						.title {
+							margin-left: 10px;
+						}
+					}
+
+					.item-right {
+						display: flex;
+						align-items: center;
 					}
 				}
 			}

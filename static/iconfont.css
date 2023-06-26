@@ -11,6 +11,34 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.icon-fenxiang:before {
+  content: "\e739";
+}
+
+.icon-fenxiang1:before {
+  content: "\e6a5";
+}
+
+.icon-fankui:before {
+  content: "\e738";
+}
+
+.icon-fabu:before {
+  content: "\e68f";
+}
+
+.icon-kefu:before {
+  content: "\ec2e";
+}
+
+.icon-fabu2:before {
+  content: "\e629";
+}
+
+.icon-qingchuhuancun:before {
+  content: "\e640";
+}
+
 .icon-exit1:before {
   content: "\e7cb";
 }
