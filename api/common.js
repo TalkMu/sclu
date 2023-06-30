@@ -7,3 +7,9 @@ export async function regeo(data) {
 		params: data
 	})
 }
+export async function dictType(dictType) {
+	return request({
+		url: "/system/dict/data/type/"+dictType,
+		method: "get",
+	})
+}

@@ -4,10 +4,12 @@ import Vue from 'vue'
 import App from './App'
 import TmTabBar from './components/tm-tab-bar/tm-tab-bar.vue'
 import TmListItem from './components/tm-list-item/tm-list-item.vue'
+import forSaleCommodityItem from './components/for-sale-commodity-item/for-sale-commodity-item.vue'
 
 
 Vue.component('tm-tab-bar', TmTabBar)
 Vue.component('tm-list-item', TmListItem)
+Vue.component('for-sale-commodity-item', forSaleCommodityItem)
 
 
 Vue.config.productionTip = false

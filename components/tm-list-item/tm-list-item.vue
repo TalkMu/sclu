@@ -68,6 +68,7 @@
 <style lang="scss">
 	$tm-bg-color-hover:#f1f1f1;
 	.tm-list-item {
+		background-color: #fff;
 		.item-btn {
 			padding: 0 10px 0 15px;
 			border: 0;

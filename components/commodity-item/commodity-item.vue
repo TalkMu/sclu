@@ -1,6 +1,5 @@
 <template>
 	<view class="commodity-list">
-		
 		<view v-for="(item,index) of commodityList" class="commodity-item" @click="onCommodityItemClick(item)">
 			<image class="cover-img" :src="item.mainCoverUrl" mode="widthFix"></image>
 			<view class="detail-content">
@@ -57,8 +56,11 @@
 		},
 		methods:{
 			onCommodityItemClick(item){
+				const params = {
+					commodityId:item.id
+				}
 				uni.navigateTo({
-					url:'/pages/commodity/commodity?params='+ encodeURIComponent(JSON.stringify(item))
+					url:'/pages/commodity/commodity?params='+ encodeURIComponent(JSON.stringify(params))
 				})
 			}
 		}

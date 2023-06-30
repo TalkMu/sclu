@@ -1,79 +1,88 @@
 {
 	"pages": [{
-			"path": "pages/my/my",
-			"style": {
-				"navigationBarTitleText": "我的",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/index/index",
-			"style": {
-				"navigationBarTitleText": "闲置猫",
-				"enablePullDownRefresh": true
-			}
-		},{
-            "path" : "pages/login/register",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        },{
-            "path" : "pages/login/login",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        },{
-			"path": "pages/commodity/commodity",
-			"style": {
-				"navigationBarTitleText": "",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/commodity/add",
-			"style": {
-				"navigationBarTitleText": "",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/publish/publish",
-			"style": {
-				"navigationBarTitleText": "",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/category/category",
-			"style": {
-				"navigationBarTitleText": "",
-				"enablePullDownRefresh": false
-			}
-
-		}, {
-			"path": "pages/task/task",
-			"style": {
-				"navigationBarTitleText": "",
-				"enablePullDownRefresh": false
-			}
-
+		"path": "pages/my/publish",
+		"style": {
+			"navigationBarTitleText": "我发布的",
+			"enablePullDownRefresh": true
 		}
-        ,{
-            "path" : "pages/commodity/list",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-    ],
+
+	}, {
+		"path": "pages/my/my",
+		"style": {
+			"navigationBarTitleText": "我的",
+			"enablePullDownRefresh": false
+		}
+
+	}, {
+		"path": "pages/commodity/add",
+		"style": {
+			"navigationBarTitleText": "",
+			"enablePullDownRefresh": false
+		}
+
+	}, {
+		"path": "pages/my/publishCommodityList",
+		"style": {
+			"navigationBarTitleText": "",
+			"enablePullDownRefresh": true
+		}
+
+	}, {
+		"path": "pages/commodity/list",
+		"style": {
+			"navigationBarTitleText": "",
+			"enablePullDownRefresh": true
+		}
+
+	}, {
+		"path": "pages/index/index",
+		"style": {
+			"navigationBarTitleText": "闲置猫",
+			"enablePullDownRefresh": true
+		}
+	}, {
+		"path": "pages/login/register",
+		"style": {
+			"navigationBarTitleText": "",
+			"enablePullDownRefresh": false
+		}
+
+	}, {
+		"path": "pages/login/login",
+		"style": {
+			"navigationBarTitleText": "",
+			"enablePullDownRefresh": false
+		}
+
+	}, {
+		"path": "pages/commodity/commodity",
+		"style": {
+			"navigationBarTitleText": "",
+			"enablePullDownRefresh": false
+		}
+
+	}, {
+		"path": "pages/publish/publish",
+		"style": {
+			"navigationBarTitleText": "",
+			"enablePullDownRefresh": false
+		}
+
+	}, {
+		"path": "pages/category/category",
+		"style": {
+			"navigationBarTitleText": "",
+			"enablePullDownRefresh": false
+		}
+
+	}, {
+		"path": "pages/task/task",
+		"style": {
+			"navigationBarTitleText": "",
+			"enablePullDownRefresh": false
+		}
+
+	}],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
@@ -89,19 +98,20 @@
 		"borderStyle": "black",
 		"backgroundColor": "#ffffff",
 		"list": [{
-			"pagePath": "pages/index/index",
-			"text": "首页"
-		}
-		// , {
-		// 	"pagePath": "pages/category/category",
-		// 	"text": "分类"
-		// }, {
-		// 	"pagePath": "pages/task/task",
-		// 	"text": "赚钱"
-		// }
-		, {
-			"pagePath": "pages/my/my",
-			"text": "我的"
-		}]
+				"pagePath": "pages/index/index",
+				"text": "首页"
+			}
+			// , {
+			// 	"pagePath": "pages/category/category",
+			// 	"text": "分类"
+			// }, {
+			// 	"pagePath": "pages/task/task",
+			// 	"text": "赚钱"
+			// }
+			, {
+				"pagePath": "pages/my/my",
+				"text": "我的"
+			}
+		]
 	}
 }

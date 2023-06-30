@@ -154,6 +154,11 @@
 				this.content = content;
 			},
 			onCommentSubmit(event){
+				const userInfo = uni.getStorageSync("userInfo");
+				this.curUser = {
+					userId:userInfo.userId,
+					avatarUrl:userInfo.avatarUrl
+				}
 				const params = {
 					fromId:this.curUser.userId,
 					toId:null,

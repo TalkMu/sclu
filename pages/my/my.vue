@@ -12,20 +12,20 @@
 			</view>
 			<view class="grid-wrapper">
 				<view class="grid-list">
-					<view class="item">
-						<text class="number">20</text>
+					<view class="item" @click="toMyStarPage">
+						<text class="number">{{data.starCount}}</text>
 						<text>收藏</text>
 					</view>
-					<view class="item">
-						<text class="number">350</text>
+					<view class="item" @click="toMyBrowsePage">
+						<text class="number">{{data.browseCount}}</text>
 						<text>足迹</text>
 					</view>
 					<view class="item">
-						<text class="number">12</text>
+						<text class="number">{{data.concernCount}}</text>
 						<text>关注</text>
 					</view>
 					<view class="item">
-						<text class="number">55</text>
+						<text class="number">{{data.fansCount}}</text>
 						<text>粉丝</text>
 					</view>
 				</view>
@@ -44,16 +44,13 @@
 				</view>
 			</view> -->
 			<view class="list-wrapper">
-				<uni-list>
-					<tm-list-item title="我的发布" showArrow clickable :extra-icon="extraIcon.fabu" @click="toMyPublishPage" />
-					<tm-list-item title="意见反馈" showArrow :extra-icon="extraIcon.fankui" open-type="feedback" />
-					<tm-list-item title="联系客服" showArrow :extra-icon="extraIcon.kefu" open-type="contact" />
-					<tm-list-item title="清除缓存" showArrow clickable :extra-icon="extraIcon.qingchuhuancun"
-						@click="onClearCache" />
-					<tm-list-item title="分享应用" showArrow clickable :extra-icon="extraIcon.fenxiang" open-type="share"
-						/>
-				</uni-list>
-			</view>	
+				<tm-list-item title="我的发布" showArrow clickable :extra-icon="extraIcon.fabu" @click="toMyPublishPage" />
+				<tm-list-item title="意见反馈" showArrow :extra-icon="extraIcon.fankui" open-type="feedback" />
+				<tm-list-item title="联系客服" showArrow :extra-icon="extraIcon.kefu" open-type="contact" />
+				<tm-list-item title="清除缓存" showArrow clickable :extra-icon="extraIcon.qingchuhuancun"
+					@click="onClearCache" />
+				<tm-list-item title="分享应用" showArrow clickable :extra-icon="extraIcon.fenxiang" open-type="share" />
+			</view>
 		</view>
 		<view class="tab-bar">
 			<tm-tab-bar :currentPage="2"></tm-tab-bar>
@@ -62,6 +59,7 @@
 </template>
 
 <script>
+	import {getMyData} from '@/api/user.js'
 	export default {
 		onShareAppMessage(res) {
 			if (res.from === 'button') { // 来自页面内分享按钮
@@ -74,6 +72,12 @@
 		},
 		data() {
 			return {
+				data:{
+					starCount:0,
+					browseCount:0,
+					concernCount:0,
+					fansCount:0,
+				},
 				user: {
 					avatarUrl: "https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0",
 					nickName: "请点击登录",
@@ -137,12 +141,25 @@
 			this.initPage();
 		},
 		methods: {
-			toMyPublishPage(){
+			toMyBrowsePage() {
 				const params = {
-					status:'my'
+					status: 'browse'
 				}
 				uni.navigateTo({
-					url:'/pages/commodity/list?params=' + encodeURIComponent(JSON.stringify(params))
+					url: '/pages/commodity/list?params=' + encodeURIComponent(JSON.stringify(params))
+				})
+			},
+			toMyStarPage() {
+				const params = {
+					status: 'star'
+				}
+				uni.navigateTo({
+					url: '/pages/commodity/list?params=' + encodeURIComponent(JSON.stringify(params))
+				})
+			},
+			toMyPublishPage() {
+				uni.navigateTo({
+					url: '/pages/my/publishCommodityList'
 				})
 			},
 			onClearCache() {
@@ -185,6 +202,7 @@
 						avatarUrl: userInfo.avatarUrl,
 						nickName: userInfo.nickName
 					}
+					this.loadMyData();
 				} else {
 					console.log("未登录")
 					this.initUserInfo()
@@ -196,6 +214,12 @@
 					avatarUrl: "https://mmbiz.qpic.cn/mmbiz/icTdbqWNOwNRna42FI242Lcia07jQodd2FJGIYQfG0LAJGFxM4FbnQP6yfMxBgJ0F3YRqJCJ1aPAK2dQagdusBZg/0",
 					nickName: "请点击登录"
 				}
+			}
+			,
+			loadMyData(){
+				getMyData().then(res=>{
+					this.data = res.data.data
+				})
 			}
 		}
 	}
@@ -317,6 +341,9 @@
 			.list-wrapper {
 				border-radius: 20px;
 				overflow: hidden;
+				display: flex;
+				flex-direction: column;
+				gap: 1px;
 
 				.cell-btn {
 					padding: 0 10px 0 15px;

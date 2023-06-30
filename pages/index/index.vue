@@ -27,13 +27,14 @@
 			</uni-grid>
 		</view>
 		<view class="commodity-wrapper">
-			<view class="left-commodity-list">
+			<view class="left-commodity-list" :style="{'width':commodityWidth+'px'}">
 				<commodity-item :list="leftCommodityList"></commodity-item>
 			</view>
-			<view class="right-commodity-list">
+			<view class="right-commodity-list" :style="{'width':commodityWidth+'px'}">
 				<commodity-item :list="rightCommodityList"></commodity-item>
 			</view>
 		</view>
+		<uni-load-more :status="status" />
 		<view class="tab-bar">
 			<tm-tab-bar :currentPage="0"></tm-tab-bar>
 		</view>
@@ -53,11 +54,13 @@
 			CommodityItem
 		},
 		onLoad() {
+			this.windowWidth = uni.getSystemInfoSync().windowWidth
+			this.commodityWidth = (this.windowWidth - 30) / 2
 		},
 		onShow() {
 			const location = uni.getStorageSync("location");
-			if(location != null){
-				console.log("----------------"+location.city)
+			if (location != null) {
+				console.log("----------------" + location.city)
 				this.cityName = location.city
 			}
 		},
@@ -77,10 +80,12 @@
 		},
 		data() {
 			return {
+				status: 'more',
+				commodityWidth: 0,
 				pageNum: 1,
 				pageSize: 10,
 				totalPage: 99,
-				cityName:"定位中",
+				cityName: "定位中",
 				categoryList: [{
 						name: "家具生活",
 						imgUrl: "https://pic1.zhimg.com/v2-dcb4723cec102a710ff5fed1251012a1_xs.jpg?source=172ae18b"
@@ -123,35 +128,33 @@
 			this.loadData()
 		},
 		methods: {
-			
 			loadData() {
+				this.status = "loading"
 				if (this.pageNum > this.totalPage) {
-					uni.showToast({
-						title: "暂无更多数据"
-					})
+					this.status = "no-more"
 					return;
 				}
 				const params = {
 					pageNum: this.pageNum,
 					pageSize: this.pageSize
 				}
+				const that = this;
 				getCommodityList(params).then(res => {
 					if (res.data.code == 200) {
 						const list = res.data.rows;
-						this.totalPage = (res.data.total + this.pageSize - 1) / this.pageSize
+						that.totalPage = (res.data.total + that.pageSize - 1) / that.pageSize
 						list.forEach((item, index) => {
 							if ((index + 1) % 2 == 1) {
-								this.leftCommodityList.push(item);
+								that.leftCommodityList.push(item);
 							} else {
-								this.rightCommodityList.push(item);
+								that.rightCommodityList.push(item);
 							}
 						})
-						this.pageNum++
+						that.pageNum++
+						that.status = "more"
 					}
 
 				})
-
-				console.log(this.leftCommodityList)
 			}
 		}
 	}
@@ -163,6 +166,7 @@
 		display: flex;
 		flex-direction: column;
 		gap: 10px;
+		padding-bottom: 150px;
 
 		.search-wrapper {
 			padding: 10px;
@@ -244,20 +248,15 @@
 		}
 
 		.commodity-wrapper {
-			padding-bottom: 150px;
+
 			margin: 0px 10px;
 			display: flex;
 			justify-content: space-between;
 			gap: 10px;
 
-			.left-commodity-list {
-				width: 100%;
+			.left-commodity-list {}
 
-			}
-
-			.right-commodity-list {
-				width: 100%;
-			}
+			.right-commodity-list {}
 
 		}
 	}

@@ -1,48 +1,58 @@
 <template>
 	<view class="container">
 		<form>
-			<textarea class="commodity-content" name="content" type="text" v-model="form.content"
-				placeholder="宝贝名称、描述,如品牌型号、入手渠道、转手原因..."></textarea>
-			<uni-file-picker mode="grid" @delete="pickerDelete" :auto-upload="false" @select="selectImage" @progress="uploadProgress"
-				@success="uploadSuccess" limit="9" title="" v-model="form.imgList"
-				fileMediatype="image"></uni-file-picker>
+			<view class="commodity-body">
+				<view class="commodity-content-wrapper">
+					<textarea class="commodity-content" name="content" type="text" v-model="form.content"
+						placeholder="宝贝名称、描述,如品牌型号、入手渠道、转手原因..." maxlength="1000"></textarea>
+					<uni-file-picker mode="grid" @delete="pickerDelete" :auto-upload="false" @select="selectImage"
+						@progress="uploadProgress" @success="uploadSuccess" limit="9" title="" v-model="form.imgList"
+						fileMediatype="image"></uni-file-picker>
 
-			<view class="location" @click="chooseLocation">
-				<uni-icons type="location" size="16" color="#a5a5a5"></uni-icons>{{form.location.name}}<uni-icons
-					type="forward" size="12" color="#a5a5a5"></uni-icons>
+					<view class="location" @click="chooseLocation">
+						<uni-icons type="location" size="16"
+							color="#a5a5a5"></uni-icons>{{form.location?form.location.name:"请选择定位"}}<uni-icons type="forward" size="12"
+							color="#a5a5a5"></uni-icons>
+					</view>
+				</view>
+				<view class="commodity-attr-wrapper">
+					<uni-list>
+						<uni-list-item :show-extra-icon="true" showArrow :extra-icon="icon.category" title="分类">
+							<template v-slot:footer>
+								<uni-data-picker v-model="form.categoryModel.value" v-slot:default="{data, error, options}"
+									ref="categoryDataPicker" :localdata="categoryOptions" popup-title="商品类别"
+									@nodeclick="onCategoryOptionsClick" @change="onCategoryOptionsChange">
+									<text style="font-size: 12px;color: #999;">{{form.categoryModel.text}}</text>
+								</uni-data-picker>
+							</template>
+						</uni-list-item>
+						<uni-list-item @click="onPriceSectionClick" clickable :show-extra-icon="true" showArrow
+							:extra-icon="icon.price" title="价格">
+							<template v-slot:footer>
+								<text style="color: red;">￥{{form.price?form.price:"0.00"}}</text>
+							</template>
+						</uni-list-item>
+						<uni-list-item :show-extra-icon="true" showArrow :extra-icon="icon.fineness" title="成色">
+							<template v-slot:footer>
+								<picker @change="bindFinenessPickerChange" :value="form.finenessModel.value"
+									:range="finenessOptions" range-key="dictLabel">
+									<text style="font-size: 12px;color: #999;">{{form.finenessModel.text}}</text>
+								</picker>
+							</template>
+						</uni-list-item>
+						<uni-list-item @click="onDeliveryModeSectionClick" clickable :show-extra-icon="true" showArrow
+							:extra-icon="icon.deliveryMode" title="发货方式">
+							<template v-slot:footer>
+								<text style="font-size: 12px;color: #999;">{{form.deliveryMode.text}}</text>
+							</template>
+						</uni-list-item>
+					</uni-list>
+				</view>
+				<view>
+					<button type="default" class="publish-btn" @click="onSumbit">发布</button>
+				</view>
 			</view>
-			<uni-list>
-				<uni-data-picker v-slot:default="{data, error, options}" ref="categoryDataPicker"
-					:localdata="categoryOptions" popup-title="商品类别" @nodeclick="onCategoryOptionsClick"
-					@change="onCategoryOptionsChange">
-					<uni-list-item :show-extra-icon="true" showArrow :extra-icon="icon.category" title="分类"
-						:rightText="form.category.text">
-					</uni-list-item>
-				</uni-data-picker>
 
-				<uni-list-item @click="onPriceSectionClick" clickable :show-extra-icon="true" showArrow
-					:extra-icon="icon.price" title="价格">
-					<template v-slot:footer>
-						<text style="color: red;">￥{{form.price?form.price:"0.00"}}</text>
-					</template>
-				</uni-list-item>
-				<uni-list-item @click="onFinenessSectionClick" clickable :show-extra-icon="true" showArrow
-					:extra-icon="icon.fineness" title="成色">
-					<template v-slot:footer>
-						<text style="font-size: 12px;color: #999;">{{form.fineness}}</text>
-					</template>
-				</uni-list-item>
-				<uni-list-item @click="onDeliveryModeSectionClick" clickable :show-extra-icon="true" showArrow
-					:extra-icon="icon.deliveryMode" title="发货方式">
-					<template v-slot:footer>
-						<text style="font-size: 12px;color: #999;">{{form.deliveryMode.text}}</text>
-					</template>
-				</uni-list-item>
-			</uni-list>
-
-			<view>
-				<button type="default" class="publish-btn" @click="onSumbit">发布</button>
-			</view>
 		</form>
 
 		<uni-popup ref="pricePopup" class="pricePopup" :safe-area="false">
@@ -63,12 +73,9 @@
 				<view class="btn-section">
 					<button type="default" class="price-submit-btn" @click="onPriceSubmit">确定</button>
 				</view>
-				<!-- <view :style="{'height':bottomHeight + 'px'}"></view> -->
 			</view>
 		</uni-popup>
-		<uni-popup ref="finenessPopup">
 
-		</uni-popup>
 		<uni-popup ref="deliveryModePopup" class="deliveryModePopup" :safe-area="false"
 			@change="deliveryModePopupChange">
 			<view class="content">
@@ -95,18 +102,24 @@
 				<view class="footer">
 					<button type="default" class="price-submit-btn" @click="onDeliveryModeSubmit">确定</button>
 				</view>
-
 			</view>
-
 		</uni-popup>
-		<!-- <view :style="{'height':bottomHeight + 'px'}"></view> -->
 	</view>
 </template>
 
 <script>
-	import {list as getCategoryList} from '/api/commodity_category.js'
-	import {add} from '@/api/commodity.js'
-	import {handleTree} from '@/utils/tools.js'
+	import {
+		list as getCategoryList
+	} from '/api/commodity_category.js'
+	import {
+		add,getEditData
+	} from '@/api/commodity.js'
+	import {
+		handleTree
+	} from '@/utils/tools.js'
+	import {
+		dictType
+	} from '@/api/common.js'
 	export default {
 		onShow() {
 			const that = this;
@@ -115,9 +128,18 @@
 					that.bottomHeight = res.safeAreaInsets.bottom + 20
 				}
 			});
-		},
-		onLoad() {
 			this.loadCommodityCategory()
+			this.loadCommodityFineness()
+		},
+		onLoad(option) {
+			if (option.params == null) {
+				return
+			}
+			const data = JSON.parse(decodeURIComponent(option.params));
+			const commodityId = data.commodityId;
+			// 查询商品详情
+			this.loadCommodityEditData(commodityId);
+			
 		},
 		data() {
 			return {
@@ -149,6 +171,7 @@
 					}
 				},
 				form: {
+					id: null,
 					content: null,
 					imgList: [],
 					location: {
@@ -157,13 +180,16 @@
 						latitude: null,
 						longitude: null,
 					},
-					category: {
+					categoryModel: {
 						value: null,
 						text: "请选择",
 					},
 					price: null,
 					originalPrice: null,
-					fineness: "请选择",
+					finenessModel: {
+						value: null,
+						text: "请选择"
+					},
 					deliveryMode: {
 						price: null,
 						mailChecked: true,
@@ -172,41 +198,68 @@
 					}
 				},
 				categoryOptions: [],
-				finenessOptions: ["全新", "几乎全新", "轻微使用痕迹", "明显使用痕迹"]
+				finenessOptions: []
 			};
 		},
 		methods: {
-			renameKey(arr){
-				if(arr == null || arr.length == 0){
+			bindFinenessPickerChange(e) {
+				const selectItem = this.finenessOptions[e.detail.value]
+				this.form.finenessModel = {
+					value: selectItem.dictValue,
+					text: selectItem.dictLabel
+				}
+			},
+			loadCommodityFineness() {
+				dictType("xzm_commodity_fineness").then(res => {
+					if (res.data.code == 200) {
+						this.finenessOptions = res.data.data
+					}
+				})
+			},
+			loadCommodityEditData(commodityId) {
+				const params = {
+					id: commodityId,
+				}
+				getEditData(params).then(res => {
+					if (res.data.code == 200) {
+						this.form = res.data.data
+					}
+				})
+			},
+			renameKey(arr) {
+				if (arr == null || arr.length == 0) {
 					return [];
 				}
 				const that = this
-				return arr.map(item=>{
+				return arr.map(item => {
 					const data = {
-						value:item.id,
-						text:item.name,
-						children:[]
+						value: item.id,
+						text: item.name,
+						children: []
 					};
-					if(item.children != null && item.children.length != 0){
+					if (item.children != null && item.children.length != 0) {
 						data.children = that.renameKey(item.children);
 					}
 					return data;
 				})
 			},
-			loadCommodityCategory(){
+			loadCommodityCategory() {
 				const that = this;
-				getCategoryList().then(res=>{
+				getCategoryList().then(res => {
 					that.categoryOptions = that.renameKey(handleTree(res.data.rows));
-					console.log("categoryOptions:"+JSON.stringify(that.categoryOptions))
 				})
 			},
 			selectImage(e) {
-				console.log('选择文件：', e)
+				const that = this;
 				const tempFiles = e.tempFiles;
-				for(let i =0;i<tempFiles.length;i++){
-					this.form.imgList.push(tempFiles[i])
+				for (let i = 0; i < tempFiles.length; i++) {
+					this.uploadImg(tempFiles[i].url).then(res=>{
+						that.form.imgList.push(res)
+						console.log("imgList:"+JSON.stringify(that.form.imgList))
+					})
+					
 				}
-				
+
 			},
 			pickerDelete(e) {
 				this.form.imgList.map((item, i) => {
@@ -221,60 +274,83 @@
 			uploadSuccess(e) {
 				console.log('上传成功：', e)
 			},
-			uploadImg(){
+			uploadImg(fileUrl) {
 				const that = this;
-				const len = this.form.imgList.length
-				const arr = [];
-				return new Promise((resolve, reject)=>{
+				return new Promise((resolve, reject) => {
 					const _that = that;
-					for(let i=0; i<that.form.imgList.length; i++ ){
-						uni.uploadFile({
-							url:that.$baseUrl + "/common/upload",
-							filePath:this.form.imgList[i].url,
-							name:"file",
-							success: (res) => {
-								const result = JSON.parse(res.data)
-								arr.push(result.url)
-								if(i == (len - 1)){
-									resolve(arr)
-								}
-							}
-						})
-					}
-					
-				})
-			},
-			onSumbit() {
-				this.uploadImg().then((res)=>{
-					const obj = this.form;
-					const params = {
-						content: obj.content,
-						imgList: res,
-						location: {
-							name: obj.location.name,
-							detail: obj.location.detail,
-							latitude: obj.location.latitude,
-							longitude: obj.location.longitude
-						},
-						categoryId: obj.category.value,
-						price: obj.price,
-						originalPrice: obj.originalPrice,
-						fineness: obj.fineness,
-						deliveryMode: obj.deliveryMode
-					}
-					console.log("onSubmit:" + JSON.stringify(params));
-					add(params).then(res=>{
-						const data = res.data;
-						console.log("add-commodity-res:" + JSON.stringify(res));
-						if(data.code == 200){
+					uni.uploadFile({
+						url: that.$baseUrl + "/common/upload",
+						filePath: fileUrl,
+						name: "file",
+						success: (res) => {
+							const result = JSON.parse(res.data)
 							const params = {
-								id:data.data
+								url:result.url,
+								name:result.fileName,
+								extname:result.extname
 							}
-							uni.redirectTo({
-								url:"/pages/commodity/commodity?params="+JSON.stringify(params)
-							})
+							resolve(params)
 						}
 					})
+				})
+			},
+			// uploadImg() {
+			// 	const that = this;
+			// 	const len = this.form.imgList.length
+			// 	const arr = [];
+			// 	return new Promise((resolve, reject) => {
+			// 		const _that = that;
+			// 		for (let i = 0; i < that.form.imgList.length; i++) {
+			// 			uni.uploadFile({
+			// 				url: that.$baseUrl + "/common/upload",
+			// 				filePath: this.form.imgList[i].url,
+			// 				name: "file",
+			// 				success: (res) => {
+			// 					const result = JSON.parse(res.data)
+			// 					arr.push({
+			// 						url:result.url,
+			// 						name:result.fileName,
+			// 						extname:result.extname
+			// 					})
+			// 					if (arr.length == len) {
+			// 						resolve(arr)
+			// 					}
+			// 				}
+			// 			})
+			// 		}
+
+			// 	})
+			// },
+			onSumbit() {
+				const obj = this.form;
+				const params = {
+					id:obj.id,
+					content: obj.content,
+					imgList: obj.imgList,
+					location: {
+						name: obj.location.name,
+						detail: obj.location.detail,
+						latitude: obj.location.latitude,
+						longitude: obj.location.longitude
+					},
+					categoryModel: obj.categoryModel,
+					price: obj.price,
+					originalPrice: obj.originalPrice,
+					finenessModel: obj.finenessModel,
+					deliveryMode: obj.deliveryMode
+				}
+				console.log("onSubmit:" + JSON.stringify(params));
+				add(params).then(res => {
+					const data = res.data;
+					console.log("add-commodity-res:" + JSON.stringify(res));
+					if (data.code == 200) {
+						const params = {
+							commodityId: data.data
+						}
+						uni.redirectTo({
+							url: "/pages/commodity/commodity?params=" + JSON.stringify(params)
+						})
+					}
 				})
 			},
 			onDeliveryModeSubmit() {
@@ -319,7 +395,7 @@
 				uni.showActionSheet({
 					itemList: that.finenessOptions,
 					success: function(res) {
-						that.form.fineness = that.finenessOptions[res.tapIndex];
+						that.form.finenessModel = that.finenessOptions[res.tapIndex];
 					},
 					fail: function(res) {
 						console.log(res.errMsg);
@@ -330,12 +406,12 @@
 				this.$refs.deliveryModePopup.open("bottom")
 			},
 			onCategoryOptionsClick(node) {
-				this.form.category.value = node.value
+				this.form.categoryModel.value = node.value
 			},
 			onCategoryOptionsChange(e) {
 				const arr = e.detail.value;
 				const text = arr.map(p => p.text).join("/")
-				this.form.category.text = text;
+				this.form.categoryModel.text = text;
 			},
 			chooseLocation() {
 				const that = this;
@@ -397,7 +473,6 @@
 
 <style lang="scss">
 	page {
-		background-color: #fff;
 		// padding-bottom: constant(safe-area-inset-bottom);
 		// padding-bottom: env(safe-area-inset-bottom);
 	}
@@ -406,45 +481,75 @@
 		align-items: center;
 	}
 
+	.uni-list {
+		.uni-border-top {
+			border: 0px;
+		}
+
+		.uni-border-bottom {
+			border: 0px;
+		}
+	}
+
 	.container {
 		margin: 10px 10px;
-		background-color: #fff;
+		padding-bottom: 50px;
 
-		.commodity-content {
-			width: 100%;
-			height: 200px;
-			margin-bottom: 10px;
-		}
+		.commodity-body {
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
 
-		.location {
-			margin: 10px 0px;
-			display: inline-flex;
-			align-items: center;
-			justify-content: center;
-			background-color: #fafafa;
-			height: 30px;
-			font-size: 12px;
-			color: #a5a5a5;
-			border-radius: 10px;
-			padding: 0px 5px;
-		}
+			.commodity-content-wrapper {
+				padding: 10px 10px;
+				border-radius: 10px;
+				background-color: #fff;
 
-		.cu-list {
-			.cu-item {
-				border-bottom: 1px solid #f5f5f5;
-				padding-left: 0px !important;
+				.commodity-content {
+					width: 100%;
+					height: 200px;
+					margin-bottom: 10px;
+				}
+
+				.location {
+					margin: 10px 0px;
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					background-color: #fafafa;
+					height: 30px;
+					font-size: 12px;
+					color: #a5a5a5;
+					border-radius: 10px;
+					padding: 0px 5px;
+				}
 			}
+
+			.commodity-attr-wrapper {
+				border-radius: 10px;
+				overflow: hidden;
+				background-color: #fff;
+			}
+
+			// .cu-list {
+			// 	.cu-item {
+			// 		border-bottom: 1px solid #f5f5f5;
+			// 		padding-left: 0px !important;
+			// 	}
+			// }
+
+			.publish-btn {
+				margin-top: 20px;
+				background-color: #fae441;
+
+			}
+
+			// .file-picker__box-content {
+			// 	border-radius: 10px !important;
+			// }
+
 		}
 
-		.publish-btn {
-			margin-top: 20px;
-			background-color: #fae441;
-
-		}
-
-		// .file-picker__box-content {
-		// 	border-radius: 10px !important;
-		// }
 		.deliveryModePopup {
 			.content {
 				padding-bottom: 50px;

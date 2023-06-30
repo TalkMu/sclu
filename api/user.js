@@ -28,3 +28,11 @@ export async function getPhoneNumber(data){
 		data:data
 	})
 }
+
+export async function getMyData(data){
+	return request({
+		url:"/xzm/xzmUser/getMyData",
+		method:"get",
+		params:data
+	})
+}

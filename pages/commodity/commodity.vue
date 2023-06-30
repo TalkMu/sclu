@@ -31,9 +31,9 @@
 					<text class="browse">{{data.wantCount}}人想要 {{data.browseCount}}浏览</text>
 				</view>
 			</view>
-			<view class="content-column">
+			<text class="content-column">
 				{{data.content}}
-			</view>
+			</text>
 			<view class="attribute-column" v-if="data.attributeList">
 				<view style="display: flex;overflow: auto;white-space: nowrap;">
 					<view v-for="(item,index) of data.attributeList">
@@ -239,7 +239,7 @@
 					</view>
 				</view>
 				<view class="right-btn-list">
-					<view class="want-btn-item" hover-class="want-btn-item-hover">
+					<view class="want-btn-item" hover-class="want-btn-item-hover" @click="onWantClick">
 						<uni-icons type="weixin" size="30"></uni-icons>
 						<text>我想要</text>
 					</view>
@@ -256,15 +256,17 @@
 	import {
 		getDetail
 	} from '@/api/commodity.js'
-	import {add as addStar,remove as removeStar} from '@/api/commodity_star.js'
+	import {add as addStar,cancel as cancelStar} from '@/api/commodity_star.js'
 	export default {
 		components: {
 			LeaveMessage
 		},
 		onLoad(option) {
 			const params = JSON.parse(decodeURIComponent(option.params));
-			this.commodityId = params.id
-			getDetail(this.commodityId).then(res => {
+			this.commodityId = params.commodityId
+			getDetail({
+				id:params.commodityId
+			}).then(res => {
 				this.data = res.data.data;
 			})
 		},
@@ -291,41 +293,9 @@
 					third: 0 //三分之一
 				},
 				data: {
-					user: {
-						nickName: "咸鱼用户",
-						location: "成都 金牛区",
-						avatarUrl: "../../static/logo.png"
-					},
-					hasConcern: true,
-					hasStar: false,
-					price: 30,
-					originalPrice: 1500,
-					fineness: "几乎全新",
-					wantCount: 10,
-					browseCount: 371,
-					deliveryMode: "包邮|自提",
-					content: "阿三顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶阿三顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶阿三顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶阿三顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶顶",
-					attributeList: [{
-							name: "品牌",
-							value: "力顶三水水水水"
-						},
-						{
-							name: "成色",
-							value: "几乎全新"
-						},
-						{
-							name: "鞋码",
-							value: "37"
-						}
-					],
-					imgList: [
-						"https://img0.baidu.com/it/u=677049855,3088468346&fm=253&fmt=auto&app=138&f=JPEG?w=893&h=500",
-						"https://img0.baidu.com/it/u=2907827215,3626437672&fm=253&fmt=auto&app=138&f=JPEG?w=667&h=500",
-						"https://img0.baidu.com/it/u=2907827215,3626437672&fm=253&fmt=auto&app=138&f=JPEG?w=667&h=500",
-						"https://img0.baidu.com/it/u=2191797810,1155915308&fm=253&fmt=auto&app=138&f=JPEG?w=758&h=500",
-					]
-				},
-				leavelist: []
+					user:{},
+					imgList:[],
+				}
 
 			}
 		},
@@ -343,6 +313,9 @@
 			}
 		},
 		methods: {
+			onWantClick(){
+				
+			},
 			onLeaveClick(){
 				this.$refs.leaveMessageRef.onMsgInputClick()
 			},
@@ -363,7 +336,7 @@
 						}
 					})
 				}else{
-					removeStar(params).then(res=>{
+					cancelStar(params).then(res=>{
 						if(res.data.code == 200){
 							uni.showToast({
 								title: '取消收藏成功',
